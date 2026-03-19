@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import Header from "components/Header";
+import { ComparisonWidgetHost } from "widget/ui/ComparisonWidgetHost/ComparisonWidgetHost";
 
 const LOGO_ONLY_ROUTES = new Set(["/login", "/registration"]);
 
@@ -12,6 +13,7 @@ export default function AppFrame({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Header logoOnly={logoOnly} />
+      <ComparisonWidgetHost />
       {children}
     </>
   );

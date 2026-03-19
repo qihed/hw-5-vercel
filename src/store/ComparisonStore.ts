@@ -1,68 +1,45 @@
 import { makeAutoObservable } from 'mobx';
 import type { Product } from 'api/types';
-import { LocalStorageModel } from './LocalStorageModel';
 
-const STORAGE_KEY = 'comparison_products';
+export const COMPARISON_MAX_PRODUCTS = 12;
+const normalizeDocId = (id: string) => id.trim();
 
 export class ComparisonStore {
   products: Product[] = [];
-  private maxProducts = 12;
 
-  constructor() {
+  constructor(initialProducts: Product[] = []) {
     makeAutoObservable(this);
-    this.loadFromStorage();
+    this.products = this.normalize(initialProducts);
   }
 
-  private loadFromStorage() {
-    try {
-      const ids = LocalStorageModel.getItemJson<string[]>(STORAGE_KEY, []);
-      if (Array.isArray(ids) && ids.length > 0) {
-        this.products = ids
-          .map((id) => {
-            const item = LocalStorageModel.getItemJson<Product | null>(
-              `${STORAGE_KEY}_${id}`,
-              null
-            );
-            return item;
-          })
-          .filter((p): p is Product => p != null);
-      }
-    } catch {
-      return;
+  private normalize(products: Product[]): Product[] {
+    const seen = new Set<string>();
+    const result: Product[] = [];
+    for (const p of products) {
+      const docId = normalizeDocId(p.documentId);
+      if (!docId || seen.has(docId)) continue;
+      seen.add(docId);
+      result.push({ ...p, documentId: docId });
+      if (result.length >= COMPARISON_MAX_PRODUCTS) break;
     }
-  }
-
-  private persist() {
-    const ids = this.products.map((p) => p.documentId);
-    const oldIds = LocalStorageModel.getItemJson<string[]>(STORAGE_KEY, []);
-    LocalStorageModel.setItemJson(STORAGE_KEY, ids);
-    this.products.forEach((p) => {
-      LocalStorageModel.setItemJson(`${STORAGE_KEY}_${p.documentId}`, p);
-    });
-    oldIds.forEach((id) => {
-      if (!ids.includes(id)) {
-        LocalStorageModel.removeItem(`${STORAGE_KEY}_${id}`);
-      }
-    });
+    return result;
   }
 
   addProduct(product: Product) {
-    if (this.products.some((p) => p.documentId === product.documentId)) return;
-    if (this.products.length >= this.maxProducts) return;
-    this.products = [...this.products, product];
-    this.persist();
+    const docId = normalizeDocId(product.documentId);
+    if (!docId) return;
+    if (this.products.some((p) => p.documentId === docId)) return;
+    if (this.products.length >= COMPARISON_MAX_PRODUCTS) return;
+    this.products = [...this.products, { ...product, documentId: docId }];
   }
 
   removeProduct(documentId: string) {
-    this.products = this.products.filter((p) => p.documentId !== documentId);
-    this.persist();
+    const docId = normalizeDocId(documentId);
+    this.products = this.products.filter((p) => p.documentId !== docId);
   }
 
   clear() {
-    const ids = this.products.map((p) => p.documentId);
     this.products = [];
-    LocalStorageModel.removeItem(STORAGE_KEY);
-    ids.forEach((id) => LocalStorageModel.removeItem(`${STORAGE_KEY}_${id}`));
   }
 
   get count(): number {
@@ -70,6 +47,7 @@ export class ComparisonStore {
   }
 
   hasProduct(documentId: string): boolean {
-    return this.products.some((p) => p.documentId === documentId);
+    const docId = normalizeDocId(documentId);
+    return this.products.some((p) => p.documentId === docId);
   }
 }

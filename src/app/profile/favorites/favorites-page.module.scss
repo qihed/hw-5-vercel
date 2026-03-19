@@ -1,0 +1,265 @@
+@use 'styles/variables' as *;
+
+.container {
+  width: 100%;
+}
+
+.title {
+  margin-bottom: 24px;
+  font-size: 32px;
+}
+
+.foldersPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.folderTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.folderTab {
+  border: 1px solid $gray-200;
+  background: $white;
+  color: $neutral-333;
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.folderTabWrap {
+  position: relative;
+}
+
+.folderDeleteBtn {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  border: 1px solid $danger-200;
+  background: $white;
+  color: $danger-500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.folderTabWrap:hover .folderDeleteBtn {
+  opacity: 1;
+}
+
+.folderTabActive {
+  background: $brand;
+  border-color: $brand;
+  color: $white;
+}
+
+.addFolderBtn {
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: 1px solid $gray-200;
+  background: $white;
+  color: $neutral-333;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+
+  &:hover {
+    border-color: $brand;
+    color: $brand;
+  }
+}
+
+.folderInputInline {
+  border: 1px solid $gray-200;
+  border-radius: 999px;
+  height: 40px;
+  padding: 0 14px;
+  font-size: 14px;
+  min-width: 180px;
+  max-width: 240px;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+  padding: 44px 20px;
+  border: 1px solid $neutral-eee;
+  border-radius: 16px;
+  background: $white;
+}
+
+.backLink {
+  text-decoration: none;
+  margin-top: 8px;
+}
+
+.missingInfo {
+  margin-bottom: 12px;
+}
+
+.items {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid $neutral-eee;
+  border-radius: 14px;
+  background: $white;
+
+  @include md {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.imageWrap {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: $gray-100;
+  flex-shrink: 0;
+}
+
+.image {
+  object-fit: cover;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  flex: 1;
+}
+
+.itemTitleLink {
+  text-decoration: none;
+  color: inherit;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.actions :global(button) {
+  min-height: 52px;
+  border-radius: 12px;
+}
+
+.removeBtn {
+  width: 52px;
+  min-width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  border: 1px solid $danger-200;
+  background: $white;
+  color: $danger-500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  &:hover {
+    background: $danger-100;
+  }
+}
+
+.selectWrap {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+}
+
+.selectLabel {
+  font-size: 12px;
+  color: $gray-500;
+  line-height: 1;
+}
+
+.select {
+  border: 1px solid $gray-200;
+  border-radius: 12px;
+  min-height: 52px;
+  padding: 0 14px;
+  font-size: 14px;
+  background: $white;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-width: 132px;
+  cursor: pointer;
+  color: $neutral-333;
+}
+
+.selectChevron {
+  color: $gray-500;
+  font-size: 12px;
+}
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 100%;
+  z-index: 4;
+  border: 1px solid $gray-200;
+  border-radius: 12px;
+  background: $white;
+  box-shadow: 0 10px 20px rgba($black, 0.08);
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dropdownItem {
+  border: none;
+  background: $white;
+  color: $neutral-333;
+  border-radius: 8px;
+  min-height: 36px;
+  padding: 0 10px;
+  text-align: left;
+  cursor: pointer;
+
+  &:hover {
+    background: $neutral-f5;
+  }
+}
+
+.dropdownItemActive {
+  background: $neutral-f3;
+}

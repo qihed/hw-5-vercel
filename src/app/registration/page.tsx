@@ -22,6 +22,7 @@ const RegistrationPage = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const router = useRouter();
   const formKey = "registration";
+  const confirmPasswordError = validation.getFieldError(formKey, "confirmPassword");
 
   const validate = () => {
     validation.clearForm(formKey);
@@ -237,12 +238,12 @@ const RegistrationPage = () => {
                   reg.setConfirmPassword(v);
                 }}
                 placeholder="Repeat your password"
-                className={styles.input}
+                className={[styles.input, confirmPasswordError ? styles.inputError : ""].filter(Boolean).join(" ")}
                 afterSlot={confirmPasswordToggle}
               />
-              {validation.getFieldError(formKey, "confirmPassword") && (
+              {confirmPasswordError && (
                 <Text view="p-14" className={styles.errorText}>
-                  {validation.getFieldError(formKey, "confirmPassword")}
+                  {confirmPasswordError}
                 </Text>
               )}
             </div>

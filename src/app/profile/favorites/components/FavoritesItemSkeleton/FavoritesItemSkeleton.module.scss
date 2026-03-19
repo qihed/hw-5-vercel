@@ -1,0 +1,111 @@
+@use 'styles/variables' as *;
+
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid $neutral-eee;
+  border-radius: 14px;
+  background: $white;
+
+  @include md {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.image {
+  width: 80px;
+  height: 80px;
+  border-radius: 10px;
+  background: $gray-200;
+  flex-shrink: 0;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+}
+
+.title {
+  height: 18px;
+  width: min(340px, 85%);
+  border-radius: 8px;
+  background: $gray-200;
+}
+
+.category {
+  height: 14px;
+  width: min(150px, 45%);
+  border-radius: 8px;
+  background: $gray-200;
+}
+
+.price {
+  height: 20px;
+  width: min(120px, 35%);
+  border-radius: 8px;
+  background: $gray-200;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.button {
+  min-height: 52px;
+  width: 160px;
+  border-radius: 12px;
+  background: $gray-200;
+}
+
+.remove {
+  width: 52px;
+  min-width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  background: $gray-200;
+}
+
+.selectWrap {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.selectLabel {
+  height: 10px;
+  width: 74px;
+  border-radius: 8px;
+  background: $gray-200;
+}
+
+.select {
+  min-height: 52px;
+  width: 132px;
+  border-radius: 12px;
+  background: $gray-200;
+}
+
+.pulse {
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.55;
+  }
+}

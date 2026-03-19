@@ -1,0 +1,80 @@
+@use 'styles/variables' as *;
+
+.inlinePopover {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  margin-bottom: 6px;
+  z-index: 300;
+  min-width: 240px;
+  max-width: 280px;
+  background: $white;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  border: 1px solid #eee;
+  overflow: hidden;
+}
+
+.inlineHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: #f8f8f8;
+  border-bottom: 1px solid #eee;
+}
+
+.inlineHeaderTitle {
+  font-size: 12px;
+  font-weight: 600;
+  color: $font-hover;
+}
+
+.inlineCloseBtn {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  color: $font-hover;
+}
+
+.inlineList {
+  margin: 0;
+  padding: 8px 12px 12px;
+}
+
+.inlineRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 12px;
+  padding: 4px 0;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.blockInlineRoot {
+  margin: 0;
+  padding: 8px 0 0;
+}
+
+.blockInlineList {
+  margin: 0;
+  padding: 0;
+}
+
+.inlineDt {
+  margin: 0;
+  color: $font-hover;
+  flex-shrink: 0;
+}
+
+.inlineDd {
+  margin: 0;
+  text-align: right;
+  font-weight: 500;
+}
+

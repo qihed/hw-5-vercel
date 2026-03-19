@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -10,19 +10,21 @@ import Text from "components/Text";
 import CartIcon from "icons/CartIcon";
 import CompareIcon from "icons/CompareIcon";
 import ProfileIcon from "icons/ProfileIcon";
-import ComparisonWidget from "widget/ComparisonWidget";
-import { WidgetStore } from "widget/store";
 import styles from "components/Header/Header.module.scss";
 import { useStore } from "@/src/store/StoreContext";
 import { observer } from "mobx-react-lite";
 
+const navItems = [
+  { href: "/products", label: "Products", active: (pathname: string) => pathname.startsWith("/products") },
+  { href: "/categories", label: "Categories", active: (pathname: string) => pathname.startsWith("/categories") },
+  { href: "/about", label: "About us", active: (pathname: string) => pathname.startsWith("/about") },
+];
+
 const Header = ({ logoOnly = false }: { logoOnly?: boolean }) => {
   const pathname = usePathname();
   const store = useStore();
-  const { cart, auth } = store;
-  const [widgetStore] = useState(() => new WidgetStore(store));
+  const { cart, auth, comparisonWidget } = store;
   const [hydrated, setHydrated] = useState(false);
-  const compareTriggerRef = useRef<HTMLButtonElement>(null);
   useEffect(() => {
     queueMicrotask(() => setHydrated(true));
   }, []);
@@ -47,42 +49,46 @@ const Header = ({ logoOnly = false }: { logoOnly?: boolean }) => {
       {!logoOnly && (
         <>
           <div className={styles.namePages}>
-            <Link href="/products" className={styles.navLink}>
-              <Text
-                view="p-16"
-                className={cn(styles.text, pathname.startsWith('/products') && styles.textAccent)}
-              >
-                Products
-              </Text>
-            </Link>
-            <Link href="/categories" className={styles.navLink}>
-              <Text
-                view="p-16"
-                className={cn(styles.text, pathname.startsWith('/categories') && styles.textAccent)}
-              >
-                Categories
-              </Text>
-            </Link>
-            <Link href="/about" className={styles.navLink}>
-              <Text
-                view="p-16"
-                className={cn(styles.text, pathname.startsWith('/about') && styles.textAccent)}
-              >
-                About us
-              </Text>
-            </Link>
+            {navItems.map((item) => {
+              const active = item.active(pathname);
+              return (
+                <motion.div
+                  key={item.href}
+                  whileHover={{ y: -2 }}
+                  transition={{ duration: 0.16, ease: "easeOut" }}
+                >
+                  <Link href={item.href} className={styles.navLink}>
+                    <motion.div className={styles.navLinkInner}>
+                      <Text
+                        view="p-16"
+                        className={cn(styles.text, active && styles.textAccent)}
+                      >
+                        {item.label}
+                      </Text>
+                      <span
+                        className={cn(styles.navHoverLine, active && styles.navHoverLineActive)}
+                      />
+                    </motion.div>
+                  </Link>
+                </motion.div>
+              );
+            })}
           </div>
           <div className={styles.actionBtn}>
             <div className={styles.comparePromo}>
               <span className={styles.comparePromoText}>New! Try it if you&apos;re a business →</span>
               <div className={styles.compareWrap}>
               <motion.button
-                ref={compareTriggerRef}
                 type="button"
                 className={styles.iconBtn}
                 onClick={() => {
-                  widgetStore.openComparisonPreferPiP();
+                  if (comparisonWidget.isOverlay) {
+                    comparisonWidget.close();
+                    return;
+                  }
+                  comparisonWidget.openPiP();
                 }}
+                data-comparison-trigger="true"
                 aria-label="Сравнение товаров"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.98 }}
@@ -103,51 +109,62 @@ const Header = ({ logoOnly = false }: { logoOnly?: boolean }) => {
                   )}
                 </AnimatePresence>
               </motion.button>
-              <ComparisonWidget
-                isOpen={widgetStore.comparisonWidgetOpen}
-                onClose={() => widgetStore.closeComparisonWidget()}
-                triggerRef={compareTriggerRef}
-              />
               </div>
             </div>
             {hydrated && auth.isAuth ? (
               <>
                 <div className={styles.bagWrapper}>
-                  <Link
-                    href="/profile/cart"
-                    className={styles.bagLink}
-                    aria-label="Корзина"
+                  <motion.div
+                    whileHover={{ y: -1, scale: 1.04 }}
+                    whileTap={{ scale: 0.96 }}
+                    transition={{ duration: 0.16, ease: "easeOut" }}
                   >
-                    <CartIcon width={24} height={24} />
+                    <Link
+                      href="/profile/cart"
+                      className={styles.bagLink}
+                      aria-label="Корзина"
+                    >
+                      <CartIcon width={24} height={24} />
 
-                    <AnimatePresence initial={false}>
-                      {items.length !== 0 && (
-                        <motion.span
-                          key={totalCount}
-                          className={styles.iconBadge}
-                          initial={{ opacity: 0, scale: 0.85 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          exit={{ opacity: 0, scale: 0.85 }}
-                          transition={{ duration: 0.18, ease: "easeOut" }}
-                        >
-                          {totalCount}
-                        </motion.span>
-                      )}
-                    </AnimatePresence>
-                  </Link>
+                      <AnimatePresence initial={false}>
+                        {items.length !== 0 && (
+                          <motion.span
+                            key={totalCount}
+                            className={styles.iconBadge}
+                            initial={{ opacity: 0, scale: 0.85 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.85 }}
+                            transition={{ duration: 0.18, ease: "easeOut" }}
+                          >
+                            {totalCount}
+                          </motion.span>
+                        )}
+                      </AnimatePresence>
+                    </Link>
+                  </motion.div>
                 </div>
-                <Link href="/profile" className={styles.profileLink} aria-label="Профиль">
-                  <ProfileIcon width={24} height={24} color="primary" />
-                </Link>
+                <motion.div
+                  whileHover={{ y: -1, scale: 1.04 }}
+                  whileTap={{ scale: 0.96 }}
+                  transition={{ duration: 0.16, ease: "easeOut" }}
+                >
+                  <Link href="/profile" className={styles.profileLink} aria-label="Профиль">
+                    <ProfileIcon width={24} height={24} color="primary" />
+                  </Link>
+                </motion.div>
               </>
             ) : (
               <>
-                <Link href="/login" className={styles.authBtnLogin}>
-                  Log in
-                </Link>
-                <Link href="/registration" className={styles.authBtnRegister}>
-                  Registration
-                </Link>
+                <motion.div whileHover={{ y: -1, scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                  <Link href="/login" className={styles.authBtnLogin}>
+                    Log in
+                  </Link>
+                </motion.div>
+                <motion.div whileHover={{ y: -1, scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                  <Link href="/registration" className={styles.authBtnRegister}>
+                    Registration
+                  </Link>
+                </motion.div>
               </>
             )}
           </div>

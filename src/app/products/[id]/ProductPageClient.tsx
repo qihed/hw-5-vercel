@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useMemo } from 'react';
-import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { observer } from 'mobx-react-lite';
 import type { Product } from 'api/types';
 import { ProductPageStore } from './ProductPageStore';
@@ -19,6 +19,7 @@ type ProductPageClientProps = {
 };
 
 const ProductPageClient = observer(({ initialProduct }: ProductPageClientProps) => {
+  const router = useRouter();
   const pageStore = useMemo(() => new ProductPageStore(), []);
 
   useEffect(() => {
@@ -27,10 +28,18 @@ const ProductPageClient = observer(({ initialProduct }: ProductPageClientProps) 
     return () => pageStore.destroy();
   }, [initialProduct, pageStore]);
 
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      router.back();
+      return;
+    }
+    router.push('/products');
+  };
+
   return (
     <ProductPageStoreProvider store={pageStore}>
         <div className={styles.container}>
-          <Link href="/products" className={styles.back}>
+          <button type="button" className={styles.backButton} onClick={handleBack}>
             <Image
               className={`${styles.start} ${styles.block}`}
               src="/right-arrow.png"
@@ -39,7 +48,7 @@ const ProductPageClient = observer(({ initialProduct }: ProductPageClientProps) 
               height={24}
             />
             <Text view="p-20">Назад</Text>
-          </Link>
+          </button>
           <ProductDetails />
           <Text className={styles.text}>Total products</Text>
           <div className={styles.field}>

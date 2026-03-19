@@ -1,0 +1,169 @@
+@use 'styles/variables' as *;
+
+.pipItem {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid $neutral-f3;
+}
+
+.pipExpandedItem {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  padding: 12px 0;
+  border-bottom: 1px solid $neutral-f3;
+}
+
+.pipExpandedContainer {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.pipNoDecorLink {
+  text-decoration: none;
+  color: inherit;
+}
+
+.pipNoDecorFlexLink {
+  flex: 1;
+  min-width: 0;
+  text-decoration: none;
+  color: inherit;
+}
+
+.pipImageFull {
+  width: 100%;
+  aspect-ratio: 1;
+  position: relative;
+  flex-shrink: 0;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #d9d9d9;
+}
+
+.pipImageObject {
+  object-fit: cover;
+}
+
+.pipInfoRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 8px;
+}
+
+.pipInfoBlock {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pipCategory {
+  font-size: 11px;
+  color: $font-hover;
+}
+
+.pipTitle {
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pipPrice {
+  font-size: 14px;
+  font-weight: 600;
+  color: $brand;
+}
+
+.pipRemoveBtn {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  line-height: 1;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: $font-hover;
+  border-radius: 4px;
+}
+
+.pipCollapseRow {
+  display: flex;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.pipCharacteristicsBtn {
+  margin-top: 4px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 12px;
+  color: $brand;
+  text-decoration: underline;
+}
+
+.pipCollapsedRow {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.pipItemLink {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+  text-decoration: none;
+  color: inherit;
+}
+
+.pipItemImage {
+  width: 64px;
+  height: 64px;
+  position: relative;
+  flex-shrink: 0;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #d9d9d9;
+}
+
+.pipItemInfo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.linkReset {
+  text-decoration: none;
+  color: inherit;
+}
+
+.linkResetFlex {
+  text-decoration: none;
+  color: inherit;
+  flex: 1;
+  min-width: 0;
+}
+

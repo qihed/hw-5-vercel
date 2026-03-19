@@ -111,9 +111,12 @@
   align-items: center;
   justify-content: center;
   color: $white;
+  flex-shrink: 0;
+}
+
+.categoryInitial {
   font-size: 24px;
   font-weight: 700;
-  flex-shrink: 0;
 }
 
 .categoryName {

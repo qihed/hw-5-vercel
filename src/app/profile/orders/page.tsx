@@ -1,23 +1,14 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useMemo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { observer } from 'mobx-react-lite';
 import Text from 'components/Text';
 import Button from 'components/Button';
-import { readOrdersFromStorage, removeOrderFromStorage, type Order } from 'lib/ordersStorage';
-import { useStore } from 'store/StoreContext';
+import type { Order } from 'lib/ordersStorage';
 import styles from './orders-page.module.scss';
-
-type DeliveryPopupPayload = {
-  days: number;
-  address?: string;
-  orderId?: number;
-  createdAt?: number;
-};
-
-const POSTPAYMENT_POPUP_STORAGE_KEY = 'postPayment.deliveryPopup.v1';
+import { useOrdersPageModel } from './useOrdersPageModel';
 
 const statusClass: Record<Order['status'], string> = {
   delivered: 'statusDelivered',
@@ -26,48 +17,20 @@ const statusClass: Record<Order['status'], string> = {
 };
 
 const OrdersPage = () => {
-  const [orders, setOrders] = useState<Order[]>([]);
-  const { auth } = useStore();
-  const [deliveryOpen, setDeliveryOpen] = useState(false);
-  const [deliveryDays, setDeliveryDays] = useState<number>(5);
-  const [deliveryAddress, setDeliveryAddress] = useState<string>('');
-  const [deliveryOrderId, setDeliveryOrderId] = useState<number | null>(null);
+  const {
+    orders,
+    ordersLoaded,
+    deliveryPopup,
+    deliveryDaysSuffix,
+    closeDeliveryPopup,
+    removeOrder,
+    hasProfileAddress,
+  } = useOrdersPageModel();
 
-  useEffect(() => {
-    setOrders(readOrdersFromStorage());
-  }, []);
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    try {
-      const raw = window.localStorage.getItem(POSTPAYMENT_POPUP_STORAGE_KEY);
-      if (!raw) return;
-      const parsed = JSON.parse(raw) as unknown;
-      if (!parsed || typeof parsed !== 'object') return;
-      const p = parsed as DeliveryPopupPayload;
-      const days = typeof p.days === 'number' ? p.days : 5;
-      const addressFromPayload = typeof p.address === 'string' ? p.address : '';
-      const address = (addressFromPayload || auth.address || '').trim();
-
-      setDeliveryDays(days >= 5 && days <= 7 ? days : 5);
-      setDeliveryAddress(address);
-      setDeliveryOrderId(typeof p.orderId === 'number' ? p.orderId : null);
-      setDeliveryOpen(true);
-    } catch {
-      return;
-    } finally {
-      try {
-        window.localStorage.removeItem(POSTPAYMENT_POPUP_STORAGE_KEY);
-      } catch {
-        return;
-      }
-    }
-  }, [auth.address]);
-
-  const handleRemoveOrder = useCallback((orderId: number) => {
-    removeOrderFromStorage(orderId);
-    setOrders((prev) => prev.filter((o) => o.id !== orderId));
-  }, []);
+  const emptyStateSubtitle = useMemo(
+    () => 'Once you place an order, it will show up here with status and details.',
+    []
+  );
 
   return (
     <div className={styles.container}>
@@ -75,14 +38,14 @@ const OrdersPage = () => {
         My Orders
       </Text>
 
-      {deliveryOpen && (
+      {deliveryPopup && (
         <div
           className={styles.deliveryOverlay}
           role="dialog"
           aria-modal="true"
           aria-label="Delivery details"
           onMouseDown={(e) => {
-            if (e.target === e.currentTarget) setDeliveryOpen(false);
+            if (e.target === e.currentTarget) closeDeliveryPopup();
           }}
         >
           <div className={styles.deliveryModal}>
@@ -93,7 +56,7 @@ const OrdersPage = () => {
               <button
                 type="button"
                 className={styles.deliveryClose}
-                onClick={() => setDeliveryOpen(false)}
+                onClick={closeDeliveryPopup}
                 aria-label="Close"
                 title="Close"
               >
@@ -103,11 +66,11 @@ const OrdersPage = () => {
 
             <div className={styles.deliveryBody}>
               <Text view="p-16">
-                Your order will arrive in about <b>{deliveryDays}</b> {deliveryDays === 1 ? 'day' : 'days'}.
+                Your order will arrive in about <b>{deliveryPopup.days}</b> {deliveryDaysSuffix}.
               </Text>
-              {deliveryOrderId !== null && (
+              {deliveryPopup.orderId !== null && (
                 <Text view="p-14" color="secondary">
-                  Order #{deliveryOrderId}
+                  Order #{deliveryPopup.orderId}
                 </Text>
               )}
               <div className={styles.deliveryAddressBlock}>
@@ -115,17 +78,18 @@ const OrdersPage = () => {
                   Delivery address
                 </Text>
                 <Text view="p-16" weight="medium">
-                  {deliveryAddress ? deliveryAddress : 'No delivery address set in your profile.'}
+                  {deliveryPopup.address ? deliveryPopup.address : 'No delivery address set in your profile.'}
                 </Text>
               </div>
             </div>
 
             <div className={styles.deliveryFooter}>
-              <Button type="button" onClick={() => setDeliveryOpen(false)}>
+              <Button type="button" onClick={closeDeliveryPopup}>
                 Got it
               </Button>
-              {!auth.address?.trim() && (
-                <Link href="/profile" className={styles.deliveryLink} onClick={() => setDeliveryOpen(false)}>
+              {/* preserve behavior: show link only when profile address is empty */}
+              {!hasProfileAddress && (
+                <Link href="/profile" className={styles.deliveryLink} onClick={closeDeliveryPopup}>
                   Add address in profile
                 </Link>
               )}
@@ -134,7 +98,11 @@ const OrdersPage = () => {
         </div>
       )}
 
-      {orders.length === 0 ? (
+      {!ordersLoaded ? (
+        <Text view="p-16" color="secondary">
+          Loading...
+        </Text>
+      ) : orders.length === 0 ? (
         <div className={styles.empty}>
           <div className={styles.emptyIcon} aria-hidden>
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
@@ -169,7 +137,7 @@ const OrdersPage = () => {
               No orders yet
             </Text>
             <Text view="p-16" color="secondary" tag="p" className={styles.emptySubtitle}>
-              Once you place an order, it will show up here with status and details.
+              {emptyStateSubtitle}
             </Text>
           </div>
           <div className={styles.emptyActions}>
@@ -183,81 +151,75 @@ const OrdersPage = () => {
       ) : (
         <div className={styles.ordersList}>
           {orders.map((order) => (
-          <div key={order.id} className={styles.orderCard}>
-            <div className={styles.orderHeader}>
-              <div className={styles.orderInfo}>
-                <div className={styles.orderTitleRow}>
-                  <Text view="p-18" weight="bold">
-                    Order #{order.id}
+            <div key={order.id} className={styles.orderCard}>
+              <div className={styles.orderHeader}>
+                <div className={styles.orderInfo}>
+                  <div className={styles.orderTitleRow}>
+                    <Text view="p-18" weight="bold">
+                      Order #{order.id}
+                    </Text>
+                    <span className={`${styles.statusBadge} ${styles[statusClass[order.status]]}`}>
+                      {order.statusLabel}
+                    </span>
+                  </div>
+                  <Text view="p-14" color="secondary">
+                    {order.date}
                   </Text>
-                  <span className={`${styles.statusBadge} ${styles[statusClass[order.status]]}`}>
-                    {order.statusLabel}
-                  </span>
                 </div>
-                <Text view="p-14" color="secondary">
-                  {order.date}
-                </Text>
-              </div>
-              <div className={styles.orderTotal}>
-                <Text view="p-14" color="secondary">
-                  Total
-                </Text>
-                <Text view="p-20" weight="bold">
-                  {order.total.toFixed(2)} ₽
-                </Text>
-              </div>
-            </div>
-
-            <div className={styles.orderItems}>
-              {order.items.map((item, idx) => (
-                <div key={idx} className={styles.orderItem}>
-                  <div className={styles.itemImage}>
-                    {item.image ? (
-                      <Image
-                        src={item.image}
-                        alt={item.name}
-                        width={64}
-                        height={64}
-                        className={styles.itemImageImg}
-                      />
-                    ) : (
-                      <div className={styles.imagePlaceholder} />
-                    )}
-                  </div>
-                  <div className={styles.itemInfo}>
-                    <Text view="p-16" weight="medium">
-                      {item.name}
-                    </Text>
-                    <Text view="p-14" color="secondary">
-                      Quantity: {item.quantity}
-                    </Text>
-                  </div>
-                  <div className={styles.itemPrice}>
-                    <Text view="p-16" weight="medium">
-                      {item.price.toFixed(2)} ₽
-                    </Text>
-                  </div>
+                <div className={styles.orderTotal}>
+                  <Text view="p-14" color="secondary">
+                    Total
+                  </Text>
+                  <Text view="p-20" weight="bold">
+                    {order.total.toFixed(2)} ₽
+                  </Text>
                 </div>
-              ))}
-            </div>
+              </div>
 
-            <div className={styles.orderActions}>
-              <button type="button" className={styles.actionButton}>
-                Track Order
-              </button>
-              <button type="button" className={styles.actionButton}>
-                Reorder
-              </button>
-              <button
-                type="button"
-                className={styles.actionButtonDelete}
-                onClick={() => handleRemoveOrder(order.id)}
-              >
-                Delete
-              </button>
+              <div className={styles.orderItems}>
+                {order.items.map((item, idx) => (
+                  <div key={idx} className={styles.orderItem}>
+                    <div className={styles.itemImage}>
+                      {item.image ? (
+                        <Image
+                          src={item.image}
+                          alt={item.name}
+                          width={64}
+                          height={64}
+                          className={styles.itemImageImg}
+                        />
+                      ) : (
+                        <div className={styles.imagePlaceholder} />
+                      )}
+                    </div>
+                    <div className={styles.itemInfo}>
+                      <Text view="p-16" weight="medium">
+                        {item.name}
+                      </Text>
+                      <Text view="p-14" color="secondary">
+                        Quantity: {item.quantity}
+                      </Text>
+                    </div>
+                    <div className={styles.itemPrice}>
+                      <Text view="p-16" weight="medium">
+                        {item.price.toFixed(2)} ₽
+                      </Text>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className={styles.orderActions}>
+                <button
+                  type="button"
+                  className={styles.actionButtonDelete}
+                  onClick={() => removeOrder(order.id)}
+                >
+                  Delete
+                </button>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
         </div>
       )}
     </div>
@@ -265,3 +227,4 @@ const OrdersPage = () => {
 };
 
 export default observer(OrdersPage);
+

@@ -1,0 +1,318 @@
+@use 'styles/variables' as *;
+
+.container {
+  max-width: 680px;
+}
+
+.title {
+  margin-bottom: 32px;
+  font-size: 32px;
+}
+
+.section {
+  background: $white;
+  border: 1px solid $neutral-f0;
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.sectionHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.sectionHeaderTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.sectionTitleRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.sectionTitleIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: rgba($brand-dark, 0.08);
+  color: $brand-dark;
+  flex-shrink: 0;
+}
+
+.addIconButton {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid $gray-200;
+  background: $white;
+  color: $brand-dark;
+  font-size: 22px;
+  line-height: 1;
+  font-weight: 700;
+  cursor: pointer;
+
+  &:hover {
+    background: $neutral-f5;
+  }
+}
+
+.cardsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.emptyState {
+  border: 1px dashed $gray-200;
+  border-radius: 14px;
+  padding: 16px;
+  background: $neutral-fa;
+}
+
+.cardItem {
+  perspective: 1200px;
+}
+
+.cardFlipWrapper {
+  position: relative;
+  min-height: 190px;
+}
+
+.cardFlipInner {
+  position: relative;
+  min-height: 190px;
+  transform-style: preserve-3d;
+}
+
+.cardFace {
+  border: 1px solid $gray-200;
+  border-radius: 14px;
+  padding: 14px;
+  background: linear-gradient(135deg, rgba($brand-dark, 0.08), rgba($brand-dark, 0.02));
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.cardFaceBack {
+  @extend .cardFace;
+  position: absolute;
+  inset: 0;
+  transform: rotateY(180deg);
+  display: flex;
+  flex-direction: column;
+}
+
+.cardTopActions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.eyeButton {
+  appearance: none;
+  border: 1px solid rgba($brand-dark, 0.16);
+  background: rgba($white, 0.7);
+  color: $brand-dark;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  &:hover {
+    background: rgba($white, 0.95);
+  }
+}
+
+.backRows {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.backValue {
+  margin-top: 4px;
+  letter-spacing: 0.04em;
+}
+
+.cardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.cardBrand {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: $brand-dark;
+  font-weight: 700;
+}
+
+.defaultPill {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: $brand-dark;
+  color: $white;
+  font-weight: 600;
+}
+
+.cardNumber {
+  margin-bottom: 10px;
+}
+
+.addressText {
+  margin-bottom: 10px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.textareaWrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: $space-xxs;
+  border: 1px solid rgba($black, 0.12);
+  border-radius: $border-radius;
+  padding: $space-xs $space-s;
+  min-height: 52px;
+  background: $white;
+}
+
+.textareaIcon {
+  display: flex;
+  align-items: flex-start;
+  flex-shrink: 0;
+  color: rgba($brand-dark, 0.9);
+  padding-top: 2px;
+}
+
+.textareaInput {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  background-color: $brand-white;
+  padding: 0;
+  resize: vertical;
+
+  &::placeholder {
+    color: $font-hover;
+  }
+
+  &:focus {
+    color: $font-hover;
+  }
+}
+
+.textarea {
+  // Backward compatibility for any legacy usage in older markup
+  @extend .textareaInput;
+}
+
+.cardMeta {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.cardActions {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.linkButton {
+  appearance: none;
+  border: none;
+  background: $transparent;
+  padding: 0;
+  font-size: 14px;
+  color: $brand-dark;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.linkButtonDanger {
+  @extend .linkButton;
+  color: $danger-500;
+}
+
+.divider {
+  height: 1px;
+  background: $neutral-f0;
+  margin: 18px 0;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.formHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.afterSlot {
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba($brand-dark, 0.08);
+  color: $brand-dark;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.errorText {
+  color: $danger-500;
+}
+
+.formActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+@media (min-width: 640px) {
+  .cardsGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .formGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+

@@ -9,6 +9,7 @@ import { useStore } from 'store/StoreContext';
 import ProfileIcon from 'icons/ProfileIcon';
 import OrdersIcon from 'icons/OrdersIcon';
 import CartIcon from 'icons/CartIcon';
+import FavoriteIcon from 'icons/FavoriteIcon';
 import SettingsIcon from 'icons/SettingsIcon';
 import LogoutIcon from 'icons/LogoutIcon';
 import styles from './layout.module.scss';
@@ -17,6 +18,7 @@ const navItems = [
   { href: '/profile', label: 'Profile', icon: 'profile' },
   { href: '/profile/orders', label: 'My Orders', icon: 'orders' },
   { href: '/profile/cart', label: 'Cart', icon: 'cart' },
+  { href: '/profile/favorites', label: 'Favorites', icon: 'favorites' },
   { href: '/profile/settings', label: 'Settings', icon: 'settings' },
 ];
 
@@ -24,6 +26,7 @@ const icons: Record<string, React.ReactNode> = {
   profile: <ProfileIcon width={20} height={20} />,
   orders: <OrdersIcon width={20} height={20} />,
   cart: <CartIcon width={20} height={20} />,
+  favorites: <FavoriteIcon width={20} height={20} />,
   settings: <SettingsIcon width={20} height={20} />,
   logout: <LogoutIcon width={20} height={20} />,
 };
@@ -42,7 +45,7 @@ function getInitials(raw: unknown): string {
 function ProfileLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { cart, auth } = useStore();
+  const { cart, auth, favorites } = useStore();
   const mounted = useSyncExternalStore(() => () => {}, () => true, () => false);
 
   const handleLogout = () => {
@@ -85,6 +88,9 @@ function ProfileLayout({ children }: { children: React.ReactNode }) {
                 <span className={styles.navLabel}>{item.label}</span>
                 {item.icon === 'cart' && mounted && cart.totalCount > 0 && (
                   <span className={styles.badge}>{cart.totalCount}</span>
+                )}
+                {item.icon === 'favorites' && mounted && favorites.hydrated && favorites.totalCount > 0 && (
+                  <span className={styles.badge}>{favorites.totalCount}</span>
                 )}
               </Link>
             ))}

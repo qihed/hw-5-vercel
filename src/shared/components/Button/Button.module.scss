@@ -5,6 +5,7 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
   border: 0px solid $brand-white;
   padding: $space-s $space-l;
   min-height: 52px;
@@ -20,6 +21,7 @@
   }
   &:disabled {
     background-color: $brand-disabled;
+    cursor: default;
     &:hover {background-color: $brand-disabled;}
   }
 

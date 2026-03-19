@@ -1,0 +1,27 @@
+@use 'styles/variables' as *;
+
+.button {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid $gray-200;
+  background: $white;
+  color: $neutral-333;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+
+  &:hover {
+    border-color: $danger-200;
+    color: $danger-500;
+    background: $danger-100;
+  }
+}
+
+.active {
+  border-color: $danger-200;
+  color: $danger-500;
+  background: $danger-100;
+}

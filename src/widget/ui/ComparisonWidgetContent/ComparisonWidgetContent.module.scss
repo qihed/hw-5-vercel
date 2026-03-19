@@ -1,0 +1,66 @@
+@use 'styles/variables' as *;
+
+.pipHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 2px solid $neutral-f3;
+  flex-shrink: 0;
+}
+
+.pipTitle {
+  font-family: 'Roboto', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.pipDropZone {
+  margin: 8px 12px;
+  padding: 10px;
+  border: 2px dashed #d9d9d9;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.pipDropHint {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: $brand;
+}
+
+.pipDropSub {
+  display: block;
+  font-size: 11px;
+  color: $font-hover;
+  margin-top: 4px;
+}
+
+.pipList {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 20px 16px;
+}
+
+.pipEmpty {
+  font-size: 14px;
+  color: $font-hover;
+  text-align: center;
+  padding: 24px 0;
+  margin: 0;
+}
+
+.pipClearBtn {
+  margin: 12px 20px 16px;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: $font-hover;
+  background: $neutral-f5;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+

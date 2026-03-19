@@ -10,9 +10,13 @@
   flex: 1;
   min-height: 0;
   height: 100%;
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease;
 
   &:hover {
-    box-shadow: 0 4px 10px rgba($black, 0.25);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba($black, 0.16);
   }
 
   @media (max-width: 767px) {
@@ -49,6 +53,11 @@
   height: 100%;
   object-fit: contain;
   object-position: center;
+  transition: transform 0.3s ease;
+}
+
+.card:hover .imgCard {
+  transform: scale(1.04);
 }
 
 .cardCaptionSlot {

@@ -84,6 +84,15 @@
   }
 }
 
+.inputError {
+  border-color: rgba($danger-700, 0.45);
+
+  &:focus-within {
+    box-shadow: 0 0 0 1px rgba($danger-700, 0.25);
+    border-color: rgba($danger-700, 0.45);
+  }
+}
+
 .togglePassword {
   background: none;
   color: $gray-400;

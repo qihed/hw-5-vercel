@@ -24,4 +24,26 @@
   display: flex;
   min-width: 0;
   height: 100%;
+  position: relative;
+}
+
+.cardActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.favoriteTopRight {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  border-color: $gray-200;
+  background: $white;
+
+  &:hover {
+    border-color: $danger-200;
+    color: $danger-500;
+    background: $white;
+  }
 }

@@ -8,6 +8,7 @@ import { useParams } from 'next/navigation';
 import Button from 'components/Button';
 import Text from 'components/Text';
 import CartQuantityControl from 'components/CartQuantityControl';
+import FavoriteToggleButton from 'components/FavoriteToggleButton';
 import Link from 'next/link';
 import ShareButton from 'components/ShareButton';
 import styles from './product-details.module.scss';
@@ -18,6 +19,9 @@ import { createOrderFromItems } from 'lib/ordersStorage';
 import { toast } from 'sonner';
 import { AnimatePresence, motion } from 'framer-motion';
 import ProductImageNavButtons from './ProductImageNavButtons';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import type { Swiper as SwiperType } from 'swiper';
+import 'swiper/css';
 
 type PaymentCard = {
   id: string;
@@ -29,12 +33,15 @@ type PaymentCard = {
   createdAt?: number;
 };
 
-const PAYMENT_CARDS_STORAGE_KEY = 'profile.paymentCards.v1';
+const PAYMENT_CARDS_STORAGE_KEY = 'profile.paymentCards.v2';
+const LEGACY_PAYMENT_CARDS_STORAGE_KEY = 'profile.paymentCards.v1';
 
 function safeReadPaymentCards(): PaymentCard[] {
   if (typeof window === 'undefined') return [];
   try {
-    const raw = window.localStorage.getItem(PAYMENT_CARDS_STORAGE_KEY);
+    const raw =
+      window.localStorage.getItem(PAYMENT_CARDS_STORAGE_KEY) ??
+      window.localStorage.getItem(LEGACY_PAYMENT_CARDS_STORAGE_KEY);
     if (!raw) return [];
     const parsed = JSON.parse(raw) as unknown;
     if (!Array.isArray(parsed)) return [];
@@ -61,7 +68,8 @@ const ProductDetails = () => {
   const [payError, setPayError] = useState<string | null>(null);
   const [cards, setCards] = useState<PaymentCard[]>([]);
   const [selectedCardId, setSelectedCardId] = useState<string>('');
-  const [[activeImageIndex, imageDirection], setActiveImage] = useState<[number, number]>([0, 0]);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [swiper, setSwiper] = useState<SwiperType | null>(null);
   const id = params?.id as string | undefined;
   const store = useProductPageStore();
   const product = store.product;
@@ -81,35 +89,22 @@ const ProductDetails = () => {
   }, [product]);
 
   useEffect(() => {
-    setActiveImage([0, 0]);
-  }, [product?.id]);
+    setActiveImageIndex(0);
+    swiper?.slideTo(0, 0);
+  }, [product?.id, swiper]);
 
   const imageUrl = imageUrls[Math.min(activeImageIndex, imageUrls.length - 1)] ?? DEFAULT_PRODUCT_IMAGE;
   const canGoPrev = activeImageIndex > 0;
   const canGoNext = activeImageIndex < imageUrls.length - 1;
 
   const paginateImage = (direction: number) => {
-    setActiveImage(([idx]) => {
-      const next = idx + direction;
-      if (next < 0 || next > imageUrls.length - 1) return [idx, 0];
-      return [next, direction];
-    });
+    if (!swiper) return;
+    if (direction > 0) {
+      swiper.slideNext();
+      return;
+    }
+    swiper.slidePrev();
   };
-
-  const swipeConfidenceThreshold = 9000;
-  const swipePower = (offset: number, velocity: number) => Math.abs(offset) * velocity;
-
-  const imageVariants = {
-    enter: (direction: number) => ({
-      x: direction > 0 ? 220 : -220,
-    }),
-    center: {
-      x: 0,
-    },
-    exit: (direction: number) => ({
-      x: direction > 0 ? -220 : 220,
-    }),
-  } as const;
 
   const sortedCards = useMemo(() => {
     return cards
@@ -219,38 +214,27 @@ const ProductDetails = () => {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ duration: 0.22, ease: 'easeOut' }}
             >
-              <AnimatePresence mode="popLayout" initial={false} custom={imageDirection}>
-                <motion.div
-                  key={`${product.id}:${activeImageIndex}`}
-                  className={styles.galleryImageMotion}
-                  custom={imageDirection}
-                  variants={imageVariants}
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  transition={{ x: { type: 'spring', stiffness: 420, damping: 38 } }}
-                  drag={imageUrls.length > 1 ? 'x' : false}
-                  dragConstraints={{ left: 0, right: 0 }}
-                  dragElastic={0.12}
-                  whileDrag={{ cursor: 'grabbing' }}
-                  onDragEnd={(_, { offset, velocity }) => {
-                    if (imageUrls.length <= 1) return;
-                    const swipe = swipePower(offset.x, velocity.x);
-                    if (swipe < -swipeConfidenceThreshold) {
-                      paginateImage(1);
-                    } else if (swipe > swipeConfidenceThreshold) {
-                      paginateImage(-1);
-                    }
-                  }}
-                >
-                  <Image
-                    src={imageUrl}
-                    alt={product.title}
-                    fill
-                    sizes="(max-width: 767px) 100vw, (max-width: 1023px) 375px, 600px"
-                  />
-                </motion.div>
-              </AnimatePresence>
+              <Swiper
+                key={product.id}
+                className={styles.gallerySwiper}
+                slidesPerView={1}
+                allowTouchMove={imageUrls.length > 1}
+                onSwiper={setSwiper}
+                onSlideChange={(instance) => setActiveImageIndex(instance.activeIndex)}
+              >
+                {imageUrls.map((url, index) => (
+                  <SwiperSlide key={`${product.id}:${index}`}>
+                    <div className={styles.gallerySlide}>
+                      <Image
+                        src={url}
+                        alt={product.title}
+                        fill
+                        sizes="(max-width: 767px) 100vw, (max-width: 1023px) 375px, 600px"
+                      />
+                    </div>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
               {imageUrls.length > 1 && (
                 <>
                   <ProductImageNavButtons
@@ -259,8 +243,22 @@ const ProductDetails = () => {
                     onPrev={() => paginateImage(-1)}
                     onNext={() => paginateImage(1)}
                   />
-                  <div className={styles.galleryCounter} aria-label="Current image">
-                    {activeImageIndex + 1}/{imageUrls.length}
+                  <div className={styles.galleryDots} aria-label="Image pagination">
+                    {imageUrls.map((_, index) => (
+                      <button
+                        key={`${product.id}:dot:${index}`}
+                        type="button"
+                        className={[
+                          styles.galleryDot,
+                          index === activeImageIndex ? styles.galleryDotActive : '',
+                        ]
+                          .filter(Boolean)
+                          .join(' ')}
+                        aria-label={`Go to image ${index + 1}`}
+                        aria-current={index === activeImageIndex ? 'true' : undefined}
+                        onClick={() => swiper?.slideTo(index)}
+                      />
+                    ))}
                   </div>
                 </>
               )}
@@ -289,6 +287,7 @@ const ProductDetails = () => {
                     productId={product.id}
                     buttonClassName={styles.btnCart}
                   />
+                  <FavoriteToggleButton productId={product.id} className={styles.btnFavorite} />
                   <ShareButton title={product.title} iconOnly />
                 </div>
               </div>

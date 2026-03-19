@@ -8,6 +8,7 @@ import Card from 'components/Card';
 import type { Product } from 'api/types';
 import { getProductImageUrl, getProductCategoryName, DEFAULT_PRODUCT_IMAGE } from 'api/products';
 import CartQuantityControl from 'components/CartQuantityControl';
+import FavoriteToggleButton from 'components/FavoriteToggleButton';
 import { createDraggableHandlers, DRAGGABLE_PRODUCT_ATTR } from 'lib/dragDrop';
 
 export type ProductCardListProps = {
@@ -72,6 +73,8 @@ const ProductCardList = ({ products, loading = false, error = null }: ProductCar
             initial="hidden"
             animate="visible"
             exit="exit"
+            whileHover={{ y: -6 }}
+            whileTap={{ scale: 0.995 }}
             transition={{ layout: { duration: 0.5, ease: EASE_OUT } }}
           >
             {/* HTML5 drag handlers must live on a regular div (not on motion.div) */}
@@ -91,14 +94,21 @@ const ProductCardList = ({ products, loading = false, error = null }: ProductCar
                   subtitle={product.description || '—'}
                   contentSlot={<>{product.price}₽</>}
                   actionSlot={
-                    <CartQuantityControl
-                      productId={product.id}
-                      stopLinkNavigation
-                      addLabel="In cart"
-                    />
+                    <div className={styles.cardActions}>
+                      <CartQuantityControl
+                        productId={product.id}
+                        stopLinkNavigation
+                        addLabel="In cart"
+                      />
+                    </div>
                   }
                 />
               </Link>
+              <FavoriteToggleButton
+                productId={product.id}
+                stopLinkNavigation
+                className={styles.favoriteTopRight}
+              />
             </div>
           </motion.div>
         ))}

@@ -31,11 +31,20 @@ function CartInit() {
   return null;
 }
 
+function FavoritesInit() {
+  const { favorites } = useStore();
+  useEffect(() => {
+    favorites.hydrate();
+  }, [favorites]);
+  return null;
+}
+
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <StoreProvider>
       <AuthInit />
       <CartInit />
+      <FavoritesInit />
       {children}
     </StoreProvider>
   );

@@ -24,6 +24,10 @@ function parseCartResponse(data: unknown): CartItem[] {
 export class CartStore {
   items: CartItem[] = [];
   loading = false;
+  private pendingDeltas = new Map<number, number>();
+  private flushTimers = new Map<number, ReturnType<typeof setTimeout>>();
+  private inFlightProducts = new Set<number>();
+  private static readonly SYNC_DEBOUNCE_MS = 350;
 
   constructor() {
     makeAutoObservable(this);
@@ -53,22 +57,14 @@ export class CartStore {
     } else {
       this.items = [...this.items, { productId, quantity }];
     }
-    try {
-      await addCartItem(productId, quantity);
-    } catch {
-      await this.load();
-    }
+    this.queueServerDelta(productId, quantity);
   }
 
   async removeItem(productId: number) {
     const existing = this.items.find((i) => i.productId === productId);
     const qty = existing?.quantity ?? 1;
     this.items = this.items.filter((i) => i.productId !== productId);
-    try {
-      await removeCartItem(productId, qty);
-    } catch {
-      await this.load();
-    }
+    this.queueServerDelta(productId, -qty);
   }
 
   async setQuantity(productId: number, quantity: number) {
@@ -87,25 +83,15 @@ export class CartStore {
       this.items = [...this.items, { productId, quantity }];
     }
 
-    try {
-      if (diff > 0) {
-        await addCartItem(productId, diff);
-      } else if (diff < 0) {
-        await removeCartItem(productId, Math.abs(diff));
-      }
-    } catch {
-      await this.load();
-    }
+    this.queueServerDelta(productId, diff);
   }
 
   async clear() {
     const oldItems = [...this.items];
     this.items = [];
-    try {
-      await Promise.all(oldItems.map((i) => removeCartItem(i.productId, i.quantity)));
-    } catch {
-      await this.load();
-    }
+    oldItems.forEach((i) => {
+      this.queueServerDelta(i.productId, -i.quantity);
+    });
   }
 
   get totalCount(): number {
@@ -115,5 +101,53 @@ export class CartStore {
   getQuantity(productId: number): number {
     const item = this.items.find((i) => i.productId === productId);
     return item?.quantity ?? 0;
+  }
+
+  private queueServerDelta(productId: number, delta: number) {
+    if (!Number.isFinite(delta) || delta === 0) return;
+    const nextDelta = (this.pendingDeltas.get(productId) ?? 0) + delta;
+    if (nextDelta === 0) {
+      this.pendingDeltas.delete(productId);
+    } else {
+      this.pendingDeltas.set(productId, nextDelta);
+    }
+    this.scheduleFlush(productId);
+  }
+
+  private scheduleFlush(productId: number) {
+    const existingTimer = this.flushTimers.get(productId);
+    if (existingTimer) {
+      clearTimeout(existingTimer);
+    }
+    const timer = setTimeout(() => {
+      this.flushTimers.delete(productId);
+      void this.flushProductDelta(productId);
+    }, CartStore.SYNC_DEBOUNCE_MS);
+    this.flushTimers.set(productId, timer);
+  }
+
+  private async flushProductDelta(productId: number) {
+    if (this.inFlightProducts.has(productId)) return;
+
+    const delta = this.pendingDeltas.get(productId) ?? 0;
+    if (delta === 0) return;
+    this.pendingDeltas.delete(productId);
+    this.inFlightProducts.add(productId);
+
+    try {
+      if (delta > 0) {
+        await addCartItem(productId, delta);
+      } else {
+        await removeCartItem(productId, Math.abs(delta));
+      }
+    } catch {
+      this.pendingDeltas.delete(productId);
+      await this.load();
+    } finally {
+      this.inFlightProducts.delete(productId);
+      if ((this.pendingDeltas.get(productId) ?? 0) !== 0) {
+        this.scheduleFlush(productId);
+      }
+    }
   }
 }

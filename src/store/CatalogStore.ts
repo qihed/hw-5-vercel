@@ -114,8 +114,4 @@ export class CatalogStore {
       return { key: String(cat.id), value: displayName };
     });
   }
-
-  getSelectedCategoryOptions(selectedIds: number[]) {
-    return this.categoryOptions.filter((opt) => selectedIds.includes(parseInt(opt.key, 10)));
-  }
 }
