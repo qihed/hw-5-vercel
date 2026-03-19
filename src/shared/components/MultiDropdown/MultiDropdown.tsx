@@ -80,7 +80,11 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({
       >
         <Input
           value={inputValue}
-          afterSlot={<ArrowDownIcon color="secondary" />}
+          afterSlot={
+            <span className={cn(styles.chevron, isOpen && styles.chevronOpen)} aria-hidden>
+              <ArrowDownIcon color="secondary" />
+            </span>
+          }
           className={styles.borderStyle}
           onChange={(val) => {
             setQuery(val);

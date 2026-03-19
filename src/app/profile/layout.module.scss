@@ -14,14 +14,14 @@
   display: flex;
   flex-direction: column;
   padding: 32px 20px;
-  background: #fff;
-  border-bottom: 1px solid #f0f0f0;
+  background: $white;
+  border-bottom: 1px solid $neutral-f0;
 
   @include md {
     width: 260px;
     min-width: 260px;
     border-bottom: none;
-    border-right: 1px solid #f0f0f0;
+    border-right: 1px solid $neutral-f0;
     padding: 40px 24px;
   }
 }
@@ -38,7 +38,7 @@
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background-color: #3d5a58;
+  background-color: $brand-dark;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -46,7 +46,7 @@
 }
 
 .avatarText {
-  color: #fff;
+  color: $white;
   font-size: 24px;
   font-weight: 700;
   font-family: 'Roboto', sans-serif;
@@ -77,7 +77,7 @@
   padding: 12px 16px;
   border-radius: 12px;
   text-decoration: none;
-  color: #333;
+  color: $neutral-333;
   font-family: 'Roboto', sans-serif;
   font-size: 15px;
   font-weight: 400;
@@ -87,13 +87,13 @@
   width: 100%;
 
   &:hover {
-    background-color: #f5f5f5;
+    background-color: $neutral-f5;
   }
 }
 
 .navItemActive {
   background-color: $brand;
-  color: #fff;
+  color: $white;
 
   &:hover {
     background-color: $brand;
@@ -119,8 +119,8 @@
   height: 22px;
   padding: 0 6px;
   border-radius: 999px;
-  background-color: #ef4444;
-  color: #fff;
+  background-color: $danger-500;
+  color: $white;
   font-size: 12px;
   font-weight: 600;
   line-height: 22px;
@@ -134,7 +134,7 @@
   padding: 12px 16px;
   border-radius: 12px;
   text-decoration: none;
-  color: #ef4444;
+  color: $danger-500;
   font-family: 'Roboto', sans-serif;
   font-size: 15px;
   font-weight: 400;
@@ -144,7 +144,7 @@
   width: 100%;
 
   &:hover {
-    background-color: #fef2f2;
+    background-color: $danger-100;
   }
 }
 

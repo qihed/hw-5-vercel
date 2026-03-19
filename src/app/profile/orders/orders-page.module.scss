@@ -1,10 +1,11 @@
 @use 'styles/variables' as *;
 
 .container {
-  max-width: 800px;
+  max-width: none;
 }
 
 .title {
+  width: 100%;
   margin-bottom: 32px;
   font-size: 32px;
 
@@ -14,7 +15,62 @@
 }
 
 .empty {
-  padding: 24px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 36px 18px;
+  border: 1px solid rgba($black, 0.08);
+  border-radius: 18px;
+  background: rgba($white, 0.85);
+
+  @include sm {
+    padding: 44px 24px;
+  }
+
+  @include md {
+    padding: 56px 28px;
+  }
+}
+
+.emptyIcon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  color: rgba($black, 0.65);
+  background: rgba($black, 0.04);
+}
+
+.emptyText {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 480px;
+}
+
+.emptyTitle {
+  margin: 0;
+}
+
+.emptySubtitle {
+  margin: 0;
+}
+
+.emptyActions {
+  padding-top: 4px;
+}
+
+.emptyLink {
+  text-decoration: none;
+  color: inherit;
+}
+
+.emptyCta {
+  min-width: 220px;
 }
 
 .ordersList {
@@ -24,10 +80,10 @@
 }
 
 .orderCard {
-  border: 1px solid #eee;
+  border: 1px solid $neutral-eee;
   border-radius: 16px;
   padding: 24px;
-  background: #fff;
+  background: $white;
 }
 
 .orderHeader {
@@ -66,18 +122,18 @@
 }
 
 .statusDelivered {
-  background-color: #ecfdf5;
-  color: #059669;
+  background-color: $success-50;
+  color: $success-600;
 }
 
 .statusInTransit {
-  background-color: #f0fdf4;
-  color: #16a34a;
+  background-color: $success-25;
+  color: $success-600-2;
 }
 
 .statusProcessing {
-  background-color: #fffbeb;
-  color: #d97706;
+  background-color: $warning-50;
+  color: $warning-600;
 }
 
 .orderTotal {
@@ -93,7 +149,7 @@
   flex-direction: column;
   gap: 16px;
   padding: 16px 0;
-  border-top: 1px solid #f3f3f3;
+  border-top: 1px solid $neutral-f3;
 }
 
 .orderItem {
@@ -110,7 +166,7 @@
   width: 64px;
   height: 64px;
   border-radius: 10px;
-  background-color: #f3f4f6;
+  background-color: $gray-100;
 }
 
 .itemImageImg {
@@ -136,7 +192,7 @@
   display: flex;
   gap: 12px;
   padding-top: 16px;
-  border-top: 1px solid #f3f3f3;
+  border-top: 1px solid $neutral-f3;
   flex-wrap: wrap;
 }
 
@@ -145,15 +201,15 @@
   font-size: 14px;
   font-weight: 500;
   padding: 10px 20px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid $gray-200;
   border-radius: 10px;
-  background: #fff;
-  color: #333;
+  background: $white;
+  color: $neutral-333;
   cursor: pointer;
 
   &:hover {
-    background-color: #f9fafb;
-    border-color: #d1d5db;
+    background-color: $gray-50;
+    border-color: $gray-300;
   }
 }
 
@@ -162,14 +218,99 @@
   font-size: 14px;
   font-weight: 500;
   padding: 10px 20px;
-  border: 1px solid #fecaca;
+  border: 1px solid $danger-200;
   border-radius: 10px;
-  background: #fff;
-  color: #dc2626;
+  background: $white;
+  color: $danger-600;
   cursor: pointer;
 
   &:hover {
-    background-color: #fef2f2;
-    border-color: #f87171;
+    background-color: $danger-100;
+    border-color: $danger-400;
+  }
+}
+
+.deliveryOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba($black, 0.45);
+  backdrop-filter: blur(6px);
+}
+
+.deliveryModal {
+  width: min(520px, 100%);
+  border-radius: 16px;
+  background: $white;
+  border: 1px solid rgba($black, 0.08);
+  box-shadow: 0 30px 70px rgba($black, 0.22);
+  overflow: hidden;
+}
+
+.deliveryHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 18px;
+  border-bottom: 1px solid $neutral-f3;
+}
+
+.deliveryClose {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  border: 1px solid rgba($black, 0.08);
+  background: rgba($black, 0.03);
+  color: rgba($black, 0.8);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+  line-height: 1;
+
+  &:hover {
+    background: rgba($black, 0.06);
+  }
+}
+
+.deliveryBody {
+  padding: 16px 18px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.deliveryAddressBlock {
+  margin-top: 6px;
+  padding: 12px 12px;
+  border-radius: 14px;
+  background: rgba($black, 0.03);
+  border: 1px solid rgba($black, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.deliveryFooter {
+  padding: 12px 18px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.deliveryLink {
+  text-decoration: none;
+  color: rgba($black, 0.7);
+  font-size: 14px;
+
+  &:hover {
+    color: rgba($black, 0.9);
+    text-decoration: underline;
   }
 }

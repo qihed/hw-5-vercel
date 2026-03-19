@@ -7,7 +7,7 @@ import { useStore } from '@/src/store/StoreContext';
 import { createDropZoneHandlers } from 'lib/dragDrop';
 import { getProductImageUrl, getProductCategoryName, DEFAULT_PRODUCT_IMAGE } from 'api/products';
 import { getProductExtendedProps } from 'lib/productExtendedProps';
-import { ProductPropsPopover } from 'components/ComparisonWidget/ProductPropsPopover';
+import { ProductPropsPopover } from './ProductPropsPopover';
 import type { Product } from 'api/types';
 
 function getComparisonTitle(products: Product[]): string {
@@ -174,10 +174,7 @@ export type ComparisonWidgetPiPContentProps = {
 const ComparisonWidgetPiPContent = observer(({ baseUrl }: ComparisonWidgetPiPContentProps) => {
   const { comparison } = useStore();
 
-  const dropHandlers = createDropZoneHandlers<Product>(
-    (product) => comparison.addProduct(product),
-    ['product']
-  );
+  const dropHandlers = createDropZoneHandlers<Product>((product) => comparison.addProduct(product), ['product']);
 
   return (
     <div style={s.container}>
@@ -217,109 +214,127 @@ const ComparisonWidgetPiPContent = observer(({ baseUrl }: ComparisonWidgetPiPCon
 });
 
 const sExpanded = {
-  item: { display: 'flex', flexDirection: 'column' as const, alignItems: 'stretch', gap: 0, padding: '12px 0', borderBottom: `1px solid ${BORDER}` },
-  imageFull: { width: '100%', aspectRatio: '1', flexShrink: 0, borderRadius: 4, overflow: 'hidden' as const, background: DISABLED },
+  item: {
+    display: 'flex',
+    flexDirection: 'column' as const,
+    alignItems: 'stretch',
+    gap: 0,
+    padding: '12px 0',
+    borderBottom: `1px solid ${BORDER}`,
+  },
+  imageFull: {
+    width: '100%',
+    aspectRatio: '1',
+    flexShrink: 0,
+    borderRadius: 4,
+    overflow: 'hidden' as const,
+    background: DISABLED,
+  },
   infoRow: { display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8, paddingTop: 8 },
   infoBlock: { flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' as const, gap: 2 },
   collapseRow: { display: 'flex', justifyContent: 'center', marginTop: 4 },
 };
 
-const ComparisonItemPiP = observer(({
-  product,
-  baseUrl,
-  onRemove,
-}: { product: Product; baseUrl: string; onRemove: () => void }) => {
-  const [showProps, setShowProps] = useState(false);
-  const imageUrl = getProductImageUrl(product) || DEFAULT_PRODUCT_IMAGE;
-  const category = getProductCategoryName(product);
-  const extendedProps = getProductExtendedProps(product);
+const ComparisonItemPiP = observer(
+  ({ product, baseUrl, onRemove }: { product: Product; baseUrl: string; onRemove: () => void }) => {
+    const [showProps, setShowProps] = useState(false);
+    const imageUrl = getProductImageUrl(product) || DEFAULT_PRODUCT_IMAGE;
+    const category = getProductCategoryName(product);
+    const extendedProps = getProductExtendedProps(product);
 
-  if (showProps) {
-    return (
-      <div style={sExpanded.item}>
-        <div style={{ position: 'relative', flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-          <a
-            href={`${baseUrl}/products/${product.documentId}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ textDecoration: 'none', color: 'inherit' }}
-          >
-            <div style={{ ...sExpanded.imageFull, position: 'relative' as const }}>
-              <Image src={imageUrl} alt={product.title} fill style={{ objectFit: 'cover' }} sizes="(max-width: 400px) 100vw, 400px" />
-            </div>
-          </a>
-          <div style={sExpanded.infoRow}>
+    if (showProps) {
+      return (
+        <div style={sExpanded.item}>
+          <div style={{ position: 'relative', flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
             <a
               href={`${baseUrl}/products/${product.documentId}`}
               target="_blank"
               rel="noopener noreferrer"
-              style={{ flex: 1, minWidth: 0, textDecoration: 'none', color: 'inherit' }}
+              style={{ textDecoration: 'none', color: 'inherit' }}
             >
-              <div style={sExpanded.infoBlock}>
-                {category && <span style={s.itemCategory}>{category}</span>}
-                <span style={s.itemTitle}>{product.title}</span>
-                <span style={s.itemPrice}>{product.price}₽</span>
+              <div style={{ ...sExpanded.imageFull, position: 'relative' as const }}>
+                <Image
+                  src={imageUrl}
+                  alt={product.title}
+                  fill
+                  style={{ objectFit: 'cover' }}
+                  sizes="(max-width: 400px) 100vw, 400px"
+                />
               </div>
             </a>
-            <button type="button" onClick={onRemove} aria-label="Удалить из сравнения" style={s.removeBtn}>
-              ×
-            </button>
-          </div>
-          <ProductPropsPopover
-            props={extendedProps}
-            onClose={() => setShowProps(false)}
-            block
-            inline
-          />
-          <div style={sExpanded.collapseRow}>
-            <button
-              type="button"
-              style={s.characteristicsBtn}
-              onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShowProps(false); }}
-            >
-              Свернуть
-            </button>
+            <div style={sExpanded.infoRow}>
+              <a
+                href={`${baseUrl}/products/${product.documentId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ flex: 1, minWidth: 0, textDecoration: 'none', color: 'inherit' }}
+              >
+                <div style={sExpanded.infoBlock}>
+                  {category && <span style={s.itemCategory}>{category}</span>}
+                  <span style={s.itemTitle}>{product.title}</span>
+                  <span style={s.itemPrice}>{product.price}₽</span>
+                </div>
+              </a>
+              <button type="button" onClick={onRemove} aria-label="Удалить из сравнения" style={s.removeBtn}>
+                ×
+              </button>
+            </div>
+            <ProductPropsPopover props={extendedProps} onClose={() => setShowProps(false)} block inline />
+            <div style={sExpanded.collapseRow}>
+              <button
+                type="button"
+                style={s.characteristicsBtn}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setShowProps(false);
+                }}
+              >
+                Свернуть
+              </button>
+            </div>
           </div>
         </div>
+      );
+    }
+
+    return (
+      <div style={s.item}>
+        <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 14, minWidth: 0 }}>
+          <a
+            href={`${baseUrl}/products/${product.documentId}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={s.itemLink}
+          >
+            <div style={{ ...s.itemImage, position: 'relative' as const }}>
+              <Image src={imageUrl} alt={product.title} fill style={{ objectFit: 'cover' }} sizes="64px" />
+            </div>
+            <div style={s.itemInfo}>
+              {category && <span style={s.itemCategory}>{category}</span>}
+              <span style={s.itemTitle}>{product.title}</span>
+              <span style={s.itemPrice}>{product.price}₽</span>
+            </div>
+          </a>
+          <button
+            type="button"
+            style={s.characteristicsBtn}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setShowProps(true);
+            }}
+          >
+            Характеристики
+          </button>
+        </div>
+        <button type="button" onClick={onRemove} aria-label="Удалить из сравнения" style={s.removeBtn}>
+          ×
+        </button>
       </div>
     );
   }
-
-  return (
-    <div style={s.item}>
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 14, minWidth: 0 }}>
-        <a
-          href={`${baseUrl}/products/${product.documentId}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={s.itemLink}
-        >
-          <div style={{ ...s.itemImage, position: 'relative' as const }}>
-            <Image src={imageUrl} alt={product.title} fill style={{ objectFit: 'cover' }} sizes="64px" />
-          </div>
-          <div style={s.itemInfo}>
-            {category && <span style={s.itemCategory}>{category}</span>}
-            <span style={s.itemTitle}>{product.title}</span>
-            <span style={s.itemPrice}>{product.price}₽</span>
-          </div>
-        </a>
-        <button
-          type="button"
-          style={s.characteristicsBtn}
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            setShowProps(true);
-          }}
-        >
-          Характеристики
-        </button>
-      </div>
-      <button type="button" onClick={onRemove} aria-label="Удалить из сравнения" style={s.removeBtn}>
-        ×
-      </button>
-    </div>
-  );
-});
+);
 
 export { ComparisonWidgetPiPContent };
+

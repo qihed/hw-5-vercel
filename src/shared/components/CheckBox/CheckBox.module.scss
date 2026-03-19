@@ -26,21 +26,21 @@
 }
 
 .checkbox:disabled {
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba($white, 0.5);
   cursor: default;
 }
 
 .checkboxWrap .checkbox:disabled + .checkboxIcon,
 .checkboxWrap .checkboxIconDisabled {
-  color: #c4c4c4;
+  color: $neutral-c4;
 }
 
 .checkbox:disabled:hover {
-  border-color: transparent;
+  border-color: $transparent;
 }
 
 .checkboxWrap:hover .checkbox:disabled {
-  border-color: transparent;
+  border-color: $transparent;
 }
 
 .checkboxIcon {
@@ -53,5 +53,5 @@
 }
 
 .checkboxIconDisabled {
-  color: #c4c4c4;
+  color: $neutral-c4;
 }

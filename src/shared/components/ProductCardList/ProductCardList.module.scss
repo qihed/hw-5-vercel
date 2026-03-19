@@ -1,9 +1,8 @@
 @use 'styles/variables' as *;
 
 .container {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   align-items: stretch;
   gap: 20px;
   width: 100%;
@@ -12,14 +11,17 @@
   @include md {
     gap: 30px;
     padding-bottom: 55px;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   }
 
   @include lg {
     padding-bottom: 65px;
+    grid-template-columns: repeat(auto-fill, minmax(348px, 1fr));
   }
 }
 
 .cardLink {
   display: flex;
   min-width: 0;
+  height: 100%;
 }

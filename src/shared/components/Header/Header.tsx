@@ -5,12 +5,13 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import cn from "classnames";
+import { AnimatePresence, motion } from "framer-motion";
 import Text from "components/Text";
 import CartIcon from "icons/CartIcon";
 import CompareIcon from "icons/CompareIcon";
 import ProfileIcon from "icons/ProfileIcon";
-import ComparisonWidget from "components/ComparisonWidget";
-import { isPiPSupported, openComparisonInPiP } from "lib/pipComparison";
+import ComparisonWidget from "widget/ComparisonWidget";
+import { WidgetStore } from "widget/store";
 import styles from "components/Header/Header.module.scss";
 import { useStore } from "@/src/store/StoreContext";
 import { observer } from "mobx-react-lite";
@@ -19,8 +20,8 @@ const Header = ({ logoOnly = false }: { logoOnly?: boolean }) => {
   const pathname = usePathname();
   const store = useStore();
   const { cart, auth } = store;
+  const [widgetStore] = useState(() => new WidgetStore(store));
   const [hydrated, setHydrated] = useState(false);
-  const [compareOpen, setCompareOpen] = useState(false);
   const compareTriggerRef = useRef<HTMLButtonElement>(null);
   useEffect(() => {
     queueMicrotask(() => setHydrated(true));
@@ -75,27 +76,36 @@ const Header = ({ logoOnly = false }: { logoOnly?: boolean }) => {
             <div className={styles.comparePromo}>
               <span className={styles.comparePromoText}>New! Try it if you&apos;re a business →</span>
               <div className={styles.compareWrap}>
-              <button
+              <motion.button
                 ref={compareTriggerRef}
                 type="button"
                 className={styles.iconBtn}
                 onClick={() => {
-                  if (isPiPSupported()) {
-                    openComparisonInPiP(store).catch(() => setCompareOpen(true));
-                  } else {
-                    setCompareOpen((o) => !o);
-                  }
+                  widgetStore.openComparisonPreferPiP();
                 }}
                 aria-label="Сравнение товаров"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ duration: 0.15, ease: "easeOut" }}
               >
                 <CompareIcon width={24} height={24} />
-                {hydrated && (
-                  <span className={styles.iconBadgeNew}>NEW</span>
-                )}
-              </button>
+                <AnimatePresence>
+                  {hydrated && (
+                    <motion.span
+                      className={styles.iconBadgeNew}
+                      initial={{ opacity: 0, y: -2, scale: 0.98 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -2, scale: 0.98 }}
+                      transition={{ duration: 0.22, ease: "easeOut" }}
+                    >
+                      NEW
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </motion.button>
               <ComparisonWidget
-                isOpen={compareOpen}
-                onClose={() => setCompareOpen(false)}
+                isOpen={widgetStore.comparisonWidgetOpen}
+                onClose={() => widgetStore.closeComparisonWidget()}
                 triggerRef={compareTriggerRef}
               />
               </div>
@@ -110,9 +120,20 @@ const Header = ({ logoOnly = false }: { logoOnly?: boolean }) => {
                   >
                     <CartIcon width={24} height={24} />
 
-                    {items.length !== 0 && (
-                      <span className={styles.iconBadge}>{totalCount}</span>
-                    )}
+                    <AnimatePresence initial={false}>
+                      {items.length !== 0 && (
+                        <motion.span
+                          key={totalCount}
+                          className={styles.iconBadge}
+                          initial={{ opacity: 0, scale: 0.85 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.85 }}
+                          transition={{ duration: 0.18, ease: "easeOut" }}
+                        >
+                          {totalCount}
+                        </motion.span>
+                      )}
+                    </AnimatePresence>
                   </Link>
                 </div>
                 <Link href="/profile" className={styles.profileLink} aria-label="Профиль">

@@ -1,0 +1,2 @@
+export { WidgetStore } from './WidgetStore';
+

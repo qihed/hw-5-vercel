@@ -1,11 +1,10 @@
-// Стили для страницы ошибки (app/error.tsx)
 @use 'styles/variables' as *;
 
 .container {
   padding: 20px;
   margin: 20px;
   text-align: center;
-  border: 1px solid #e74c3c;
+  border: 1px solid $error-500;
   border-radius: 8px;
 }
 

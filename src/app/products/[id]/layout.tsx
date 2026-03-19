@@ -1,7 +1,5 @@
 'use client';
 
-import Header from 'components/Header';
-
 export default function ProductLayout({
   children,
 }: {
@@ -9,7 +7,6 @@ export default function ProductLayout({
 }) {
   return (
     <>
-      <Header />
       {children}
     </>
   );

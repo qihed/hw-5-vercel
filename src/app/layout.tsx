@@ -3,6 +3,8 @@ import { Roboto } from "next/font/google";
 import "./globals.scss";
 import "styles/index.scss";
 import { Providers, QueryParamsSync } from "./providers";
+import AppToaster from "components/Toaster";
+import AppFrame from "./AppFrame";
 
 const roboto = Roboto({
   weight: ["400", "500", "700"],
@@ -26,7 +28,8 @@ export default function RootLayout({
           <Suspense fallback={null}>
             <QueryParamsSync />
           </Suspense>
-          {children}
+          <AppToaster />
+          <AppFrame>{children}</AppFrame>
         </Providers>
       </body>
     </html>

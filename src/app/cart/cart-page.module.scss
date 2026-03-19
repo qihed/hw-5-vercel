@@ -30,7 +30,55 @@
 .empty {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 18px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 36px 18px;
+  border: 1px solid rgba($black, 0.08);
+  border-radius: 18px;
+  background: rgba($white, 0.85);
+
+  @include sm {
+    padding: 44px 24px;
+  }
+
+  @include md {
+    padding: 56px 28px;
+  }
+}
+
+.emptyIcon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  color: rgba($black, 0.65);
+  background: rgba($black, 0.04);
+}
+
+.emptyText {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 480px;
+}
+
+.emptyTitle {
+  margin: 0;
+}
+
+.emptySubtitle {
+  margin: 0;
+}
+
+.emptyActions {
+  padding-top: 4px;
+}
+
+.emptyCta {
+  min-width: 220px;
 }
 
 .backLink {
@@ -52,7 +100,7 @@
   flex-direction: column;
   gap: 12px;
   padding: 16px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba($black, 0.08);
   border-radius: 12px;
 
   @include md {
@@ -76,4 +124,10 @@
 
 .footer {
   padding-top: 24px;
+}
+
+.footerActions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }

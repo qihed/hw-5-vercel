@@ -21,6 +21,9 @@
   max-width: 100%;
   height: auto;
   aspect-ratio: 1;
+  border-radius: 16px;
+  overflow: hidden;
+  background: $white;
 
   @include sm {
     max-width: 375px;
@@ -45,6 +48,65 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
+}
+
+.galleryImageMotion {
+  position: absolute;
+  inset: 0;
+  cursor: grab;
+  touch-action: pan-y;
+}
+
+.galleryNav {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  pointer-events: none;
+}
+
+.galleryNavButton {
+  pointer-events: auto;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: 1px solid rgba($black, 0.08);
+  background: rgba($white, 0.86);
+  backdrop-filter: blur(10px);
+  color: $neutral-111;
+  font-size: 26px;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba($black, 0.12);
+
+  &:hover {
+    background: rgba($white, 0.95);
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: default;
+    box-shadow: none;
+  }
+}
+
+.galleryCounter {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba($black, 0.08);
+  background: rgba($white, 0.86);
+  backdrop-filter: blur(10px);
+  color: $neutral-111;
+  font-size: 12px;
+  font-weight: 600;
+  box-shadow: 0 10px 24px rgba($black, 0.12);
 }
 
 .info {
@@ -96,6 +158,7 @@
   @include sm {
     flex-direction: row;
     gap: 24px;
+    align-items: stretch;
   }
 
   @include md {
@@ -105,11 +168,186 @@
 
 .btnCart {
   background-color: $brand;
-  border: 1px solid #afadb5;
-  color: black;
+  border: 1px solid $font-hover;
+  color: $black;
 }
 
 .btnCart:hover {
   background-color: $brand-hover;
-  color: white;
+  color: $white;
+}
+
+.payOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba($black, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.payModal {
+  width: 100%;
+  max-width: 520px;
+  background: $white;
+  border-radius: 16px;
+  border: 1px solid $neutral-f0;
+  box-shadow: 0 24px 60px rgba($black, 0.18);
+  overflow: hidden;
+}
+
+.payHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 16px;
+  border-bottom: 1px solid $neutral-f0;
+}
+
+.payClose {
+  appearance: none;
+  border: none;
+  background: $transparent;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  color: $neutral-333;
+  padding: 0 6px;
+}
+
+.payBody {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.payProduct {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid $neutral-f0;
+  border-radius: 14px;
+  background: $neutral-fa;
+}
+
+.payProductImageWrap {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: $white;
+  flex-shrink: 0;
+  border: 1px solid $gray-200;
+}
+
+.payProductImage {
+  object-fit: contain;
+  padding: 6px;
+}
+
+.payProductInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.payRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.paySection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.payEmpty {
+  border: 1px dashed $gray-200;
+  border-radius: 14px;
+  padding: 12px;
+  background: $neutral-fa;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.payLink {
+  color: $brand;
+  text-decoration: underline;
+  font-size: 14px;
+  width: fit-content;
+}
+
+.cardList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cardOption {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid $gray-200;
+  border-radius: 14px;
+  padding: 10px 12px;
+  cursor: pointer;
+  background: $white;
+}
+
+.cardOption input {
+  margin: 0;
+}
+
+.cardOptionText {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 14px;
+}
+
+.cardOptionMeta {
+  color: $gray-500;
+}
+
+.defaultPill {
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: $brand;
+  color: $white;
+  font-weight: 600;
+}
+
+.payError {
+  color: $danger-500;
+}
+
+.payFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px;
+  border-top: 1px solid $neutral-f0;
+}
+
+.payCancelButton {
+  background: $white !important;
+  color: $neutral-333 !important;
+  border: 1px solid $gray-200 !important;
+
+  &:hover {
+    background: $neutral-f5 !important;
+  }
 }

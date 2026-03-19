@@ -5,14 +5,14 @@
   height: var(--h-icon);
 
   &.iconPrimary {
-    color: #000000;
+    color: $black;
   }
 
   &.iconSecondary {
-    color: #afadb5;
+    color: $font-hover;
   }
 
   &.iconAccent {
-    color: #518581;
+    color: $brand;
   }
 }

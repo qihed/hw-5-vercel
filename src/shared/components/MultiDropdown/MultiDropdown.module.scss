@@ -13,13 +13,14 @@
   max-height: 280px;
   overflow-y: auto;
   background-color: $brand-white;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgba($black, 0.15);
   z-index: 10;
 }
 
 .mddFrameItem {
   display: flex;
-  justify-self: center;
+  width: 100%;
+  box-sizing: border-box;
   align-items: center;
   font-size: 16px;
   font-weight: 400;
@@ -27,6 +28,13 @@
   background-color: $brand-white;
   padding: $space-s $space-xs;
   height: 52px;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 120ms ease, color 120ms ease;
+
+  &:hover {
+    background-color: $brand-disabled;
+  }
 }
 
 .noCheckbox {
@@ -60,5 +68,16 @@
 }
 
 .borderStyle {
-  /* стили для обводки инпута в дропдауне при необходимости */
+}
+
+.chevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 180ms ease;
+  transform-origin: center;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
 }

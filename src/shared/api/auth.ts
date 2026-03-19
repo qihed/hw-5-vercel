@@ -15,6 +15,16 @@ type AuthResponse = {
   jwt: string;
 };
 
+export type ForgotPasswordRequest = {
+  email: string;
+};
+
+export type ResetPasswordRequest = {
+  code: string;
+  password: string;
+  passwordConfirmation: string;
+};
+
 export function getToken(): string | null {
   return LocalStorageModel.getItem(AUTH_TOKEN_KEY);
 }
@@ -58,6 +68,14 @@ export async function login(email: string, password: string) {
   setToken(data.jwt);
   setStoredUser(data.user.username);
   return data.user;
+}
+
+export async function forgotPassword(email: string): Promise<void> {
+  await api.post<void>('/auth/forgot-password', { email } satisfies ForgotPasswordRequest);
+}
+
+export async function resetPassword(params: ResetPasswordRequest): Promise<void> {
+  await api.post<void>('/auth/reset-password', params);
 }
 
 export function logout(): Promise<void> {

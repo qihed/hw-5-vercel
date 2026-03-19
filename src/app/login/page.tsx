@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Header from "components/Header";
 import Text from "components/Text";
 import Input from "components/Input";
 import CheckBox from "components/CheckBox";
@@ -13,18 +12,36 @@ import styles from "./login-page.module.scss";
 import { useStore } from "store/StoreContext";
 import { observer } from "mobx-react-lite";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const LoginPage = () => {
-  const { auth } = useStore();
+  const { auth, validation } = useStore();
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
+  const formKey = "login";
 
   const handleSubmit = async () => {
+    validation.clearForm(formKey);
+    const email = auth.email.trim();
+    const password = auth.password;
+    let ok = true;
+    if (!email) {
+      validation.setFieldError(formKey, "email", "Email is required.");
+      ok = false;
+    }
+    if (!password) {
+      validation.setFieldError(formKey, "password", "Password is required.");
+      ok = false;
+    }
+    if (!ok) return;
+
     await auth.login();
 
     if (auth.meta.error) {
-      alert("Login failed. Please check your credentials.");
+      validation.setFormError(formKey, "Login failed. Please check your credentials.");
+      toast.error("Login failed. Please check your credentials.");
     } else {
+      validation.clearForm(formKey);
       router.replace("/products");
     }
   };
@@ -45,8 +62,6 @@ const LoginPage = () => {
 
   return (
     <div className={styles.page}>
-      <Header logoOnly />
-
       <main className={styles.main}>
         <div className={styles.card}>
           <div className={styles.headerSection}>
@@ -73,10 +88,19 @@ const LoginPage = () => {
                 id="email"
                 type="email"
                 value={auth.email}
-                onChange={auth.setEmail}
+                onChange={(v) => {
+                  validation.clearFieldError(formKey, "email");
+                  validation.clearFormError(formKey);
+                  auth.setEmail(v);
+                }}
                 placeholder="example@email.com"
                 className={styles.input}
               />
+              {validation.getFieldError(formKey, "email") && (
+                <Text view="p-14" className={styles.errorText}>
+                  {validation.getFieldError(formKey, "email")}
+                </Text>
+              )}
             </div>
 
             <div>
@@ -87,11 +111,20 @@ const LoginPage = () => {
                 id="password"
                 type={showPassword ? "text" : "password"}
                 value={auth.password}
-                onChange={auth.setPassword}
+                onChange={(v) => {
+                  validation.clearFieldError(formKey, "password");
+                  validation.clearFormError(formKey);
+                  auth.setPassword(v);
+                }}
                 placeholder="Your password"
                 className={styles.input}
                 afterSlot={eyeToggle}
               />
+              {validation.getFieldError(formKey, "password") && (
+                <Text view="p-14" className={styles.errorText}>
+                  {validation.getFieldError(formKey, "password")}
+                </Text>
+              )}
             </div>
 
             <div className={styles.rememberRow}>
@@ -105,14 +138,19 @@ const LoginPage = () => {
                   Remember me
                 </Text>
               </div>
-              <a href="#" className={styles.forgotLink}>
+              <Link href="/forgot-password" className={styles.forgotLink}>
                 Forgot your password?
-              </a>
+              </Link>
             </div>
 
             <Button type="submit" className={styles.submitButton}>
               Log in
             </Button>
+            {validation.getFormError(formKey) && (
+              <Text view="p-14" className={styles.errorText}>
+                {validation.getFormError(formKey)}
+              </Text>
+            )}
 
             <Text view="p-14" color="secondary" className={styles.registerText}>
               No account?{" "}

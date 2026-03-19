@@ -1,5 +1,4 @@
 import ContentLoader from 'react-content-loader';
-import Header from 'components/Header';
 import styles from './products-page.module.scss';
 
 const BACKGROUND_COLOR = '#fafafa';
@@ -28,7 +27,6 @@ function ProductCardSkeleton() {
 export default function ProductsLoading() {
   return (
     <>
-      <Header />
       <main className={styles.main}>
         <div className={styles.mainContent}>
           <div className={styles.loadingWrap}>

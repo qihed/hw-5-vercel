@@ -6,6 +6,59 @@ $brand-disabled: #d9d9d9;
 $brand-white: #ffffff;
 $font-hover: #afadb5;
 
+// Neutrals
+$black: #000000;
+$white: $brand-white;
+$gray-50: #f9fafb;
+$gray-100: #f3f4f6;
+$gray-200: #e5e7eb;
+$gray-300: #d1d5db;
+$gray-400: #9ca3af;
+$gray-500: #6b7280;
+$gray-600: #4b5563;
+$gray-900: #111827;
+$neutral-111: #111111;
+$neutral-333: #333333;
+$neutral-eee: #eeeeee;
+$neutral-f0: #f0f0f0;
+$neutral-f5: #f5f5f5;
+$neutral-fa: #fafafa;
+$neutral-f3: #f3f3f3;
+$neutral-f8: #f8f8f8;
+$neutral-c4: #c4c4c4;
+
+// Brand tones used in UI
+$brand-dark: #3d5a58;
+
+// Semantic
+$danger-700: #b42318;
+$danger-600: #dc2626;
+$danger-500: #ef4444;
+$danger-200: #fecaca;
+$danger-100: #fef2f2;
+$danger-400: #f87171;
+$success-600: #059669;
+$success-600-2: #16a34a;
+$success-50: #ecfdf5;
+$success-25: #f0fdf4;
+$warning-50: #fffbeb;
+$warning-600: #d97706;
+
+// Custom reds (product tech tags)
+$accent-red-500: #e04141;
+$accent-red-400: #e65c5c;
+
+// Legacy/shorthand equivalents
+$legacy-red: #cc0000; // from #c00
+$legacy-red-soft: #ffeeee; // from #fee
+$error-500: #e74c3c;
+
+// Utility for old design shadows
+$neutral-121: #797979;
+
+// Keywords
+$transparent: transparent;
+
 // Отступы
 $space-xl: 24px;
 $space-l: 20px;

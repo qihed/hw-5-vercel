@@ -89,15 +89,15 @@
   justify-content: center;
   gap: $space-m;
   padding: 40px $space-xl;
-  background-color: #ffffff;
-  border: 1px solid #f3f3f3;
+  background-color: $white;
+  border: 1px solid $neutral-f3;
   text-decoration: none;
   color: inherit;
   transition: box-shadow 0.2s ease, transform 0.2s ease;
   min-height: 180px;
 
   &:hover {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 4px 16px rgba($black, 0.12);
     transform: translateY(-2px);
   }
 }
@@ -110,7 +110,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: $white;
   font-size: 24px;
   font-weight: 700;
   flex-shrink: 0;

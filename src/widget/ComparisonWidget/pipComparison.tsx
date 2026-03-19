@@ -3,7 +3,7 @@
 import { createRoot } from 'react-dom/client';
 import type RootStore from 'store/RootStore';
 import { StoreContext } from 'store/StoreContext';
-import { ComparisonWidgetPiPContent } from 'components/ComparisonWidget/ComparisonWidgetPiPContent';
+import { ComparisonWidgetPiPContent } from './ComparisonWidgetPiPContent';
 
 export function isPiPSupported(): boolean {
   return typeof window !== 'undefined' && 'documentPictureInPicture' in window;
@@ -59,3 +59,4 @@ export async function openComparisonInPiP(store: RootStore): Promise<void> {
   pipWindow.addEventListener('pagehide', cleanup);
   pipWindow.addEventListener('unload', cleanup);
 }
+

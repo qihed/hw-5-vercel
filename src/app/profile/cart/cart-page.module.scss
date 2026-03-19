@@ -28,7 +28,55 @@
 .empty {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 18px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 36px 18px;
+  border: 1px solid rgba($black, 0.08);
+  border-radius: 18px;
+  background: rgba($white, 0.85);
+
+  @include sm {
+    padding: 44px 24px;
+  }
+
+  @include md {
+    padding: 56px 28px;
+  }
+}
+
+.emptyIcon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  color: rgba($black, 0.65);
+  background: rgba($black, 0.04);
+}
+
+.emptyText {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 480px;
+}
+
+.emptyTitle {
+  margin: 0;
+}
+
+.emptySubtitle {
+  margin: 0;
+}
+
+.emptyActions {
+  padding-top: 4px;
+}
+
+.emptyCta {
+  min-width: 220px;
 }
 
 .backLink {
@@ -48,9 +96,9 @@
   flex-direction: column;
   gap: 16px;
   padding: 20px;
-  border: 1px solid #eee;
+  border: 1px solid $neutral-eee;
   border-radius: 16px;
-  background: #fff;
+  background: $white;
 
   @include md {
     flex-direction: row;
@@ -64,7 +112,7 @@
   height: 80px;
   border-radius: 12px;
   overflow: hidden;
-  background: #f3f4f6;
+  background: $gray-100;
   flex-shrink: 0;
 }
 
@@ -91,19 +139,19 @@
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  border: 1px solid #e5e7eb;
-  background: #fff;
+  border: 1px solid $gray-200;
+  background: $white;
   font-size: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: #333;
+  color: $neutral-333;
   font-family: 'Roboto', sans-serif;
 
   &:hover {
-    background: #f9fafb;
-    border-color: #d1d5db;
+    background: $gray-50;
+    border-color: $gray-300;
   }
 }
 
@@ -119,17 +167,17 @@
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  border: 1px solid #fecaca;
-  background: #fff;
+  border: 1px solid $danger-200;
+  background: $white;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: #ef4444;
+  color: $danger-500;
   margin-left: 4px;
 
   &:hover {
-    background: #fef2f2;
+    background: $danger-100;
   }
 }
 
@@ -145,9 +193,9 @@
 .summary {
   margin-top: 0;
   padding: 24px;
-  border: 1px solid #eee;
+  border: 1px solid $neutral-eee;
   border-radius: 16px;
-  background: #fff;
+  background: $white;
   width: 100%;
 
   @include lg {
@@ -172,11 +220,190 @@
 .summaryTotal {
   margin-top: 12px;
   padding-top: 16px;
-  border-top: 1px solid #eee;
+  border-top: 1px solid $neutral-eee;
 }
 
 .checkoutButton {
   width: 100%;
   border-radius: 12px;
   margin-top: 24px;
+}
+
+.shareButton {
+  margin-top: 16px;
+}
+
+.payOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba($black, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.payModal {
+  width: 100%;
+  max-width: 520px;
+  background: $white;
+  border-radius: 16px;
+  border: 1px solid $neutral-f0;
+  box-shadow: 0 24px 60px rgba($black, 0.18);
+  overflow: hidden;
+}
+
+.payHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 16px;
+  border-bottom: 1px solid $neutral-f0;
+}
+
+.payClose {
+  appearance: none;
+  border: none;
+  background: $transparent;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  color: $neutral-333;
+  padding: 0 6px;
+}
+
+.payBody {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.payProduct {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid $neutral-f0;
+  border-radius: 14px;
+  background: $neutral-fa;
+}
+
+.payProductImageWrap {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: $white;
+  flex-shrink: 0;
+  border: 1px solid $gray-200;
+}
+
+.payProductImage {
+  object-fit: contain;
+  padding: 6px;
+}
+
+.payProductInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.payRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.paySection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.payEmpty {
+  border: 1px dashed $gray-200;
+  border-radius: 14px;
+  padding: 12px;
+  background: $neutral-fa;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.payLink {
+  color: $brand;
+  text-decoration: underline;
+  font-size: 14px;
+  width: fit-content;
+}
+
+.cardList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cardOption {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid $gray-200;
+  border-radius: 14px;
+  padding: 10px 12px;
+  cursor: pointer;
+  background: $white;
+}
+
+.cardOption input {
+  margin: 0;
+}
+
+.cardOptionText {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 14px;
+}
+
+.cardOptionMeta {
+  color: $gray-500;
+}
+
+.defaultPill {
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: $brand;
+  color: $white;
+  font-weight: 600;
+}
+
+.payError {
+  color: $danger-500;
+}
+
+.payFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px;
+  border-top: 1px solid $neutral-f0;
+}
+
+.payCancelButton {
+  background: $white !important;
+  color: $neutral-333 !important;
+  border: 1px solid $gray-200 !important;
+
+  &:hover {
+    background: $neutral-f5 !important;
+  }
 }

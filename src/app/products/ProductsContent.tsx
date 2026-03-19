@@ -8,7 +8,6 @@ import TechInfo from './components/TechInfo';
 import ProductCardList from 'components/ProductCardList';
 import Text from 'components/Text';
 import Nav from './components/Nav';
-import Header from 'components/Header';
 
 export type ProductsContentProps = {
   products: Product[];
@@ -105,7 +104,6 @@ export default function ProductsContent({
 
   return (
     <>
-      <Header />
       <main className={styles.main}>
         <Description />
         <TechInfo

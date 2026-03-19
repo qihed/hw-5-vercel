@@ -4,8 +4,8 @@
   position: fixed;
   inset: 0;
   z-index: 198;
-  background: transparent;
-  pointer-events: none; /* клики проходят сквозь backdrop к карточкам товаров */
+  background: $transparent;
+  pointer-events: none;
 }
 
 .panel {
@@ -14,14 +14,14 @@
   right: 0;
   width: 320px;
   max-height: 420px;
-  background: #fff;
+  background: $white;
   border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 32px rgba($black, 0.15);
   z-index: 200;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba($black, 0.08);
 }
 
 .header {
@@ -29,7 +29,7 @@
   align-items: center;
   justify-content: space-between;
   padding: $space-s $space-m;
-  border-bottom: 1px solid #f3f3f3;
+  border-bottom: 1px solid $neutral-f3;
   flex-shrink: 0;
 }
 
@@ -56,8 +56,8 @@
   transition: background 0.2s, color 0.2s;
 
   &:hover {
-    background: #f3f3f3;
-    color: #000;
+    background: $neutral-f3;
+    color: $black;
   }
 }
 
@@ -72,7 +72,7 @@
   &:hover,
   &:focus-within {
     border-color: $brand;
-    background: rgba(81, 133, 129, 0.05);
+    background: rgba($brand, 0.05);
   }
 }
 
@@ -109,7 +109,7 @@
   align-items: center;
   gap: $space-s;
   padding: $space-s 0;
-  border-bottom: 1px solid #f3f3f3;
+  border-bottom: 1px solid $neutral-f3;
 }
 
 .itemLink {
@@ -176,8 +176,8 @@
   transition: background 0.2s, color 0.2s;
 
   &:hover {
-    background: #fee;
-    color: #c00;
+    background: $legacy-red-soft;
+    color: $legacy-red;
   }
 }
 
@@ -187,7 +187,7 @@
   font-size: 14px;
   font-weight: 500;
   color: $font-hover;
-  background: #f5f5f5;
+  background: $neutral-f5;
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -214,10 +214,10 @@
   z-index: 300;
   min-width: 260px;
   max-width: 300px;
-  background: #fff;
+  background: $white;
   border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  border: 1px solid #eee;
+  box-shadow: 0 4px 20px rgba($black, 0.15);
+  border: 1px solid $neutral-eee;
   overflow: hidden;
 }
 
@@ -226,8 +226,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 8px 12px;
-  background: #f8f8f8;
-  border-bottom: 1px solid #eee;
+  background: $neutral-f8;
+  border-bottom: 1px solid $neutral-eee;
 }
 
 .propsPopoverTitle {
@@ -248,7 +248,7 @@
   color: $font-hover;
 
   &:hover {
-    color: #000;
+    color: $black;
   }
 }
 
@@ -263,7 +263,7 @@
   gap: 12px;
   font-size: 12px;
   padding: 4px 0;
-  border-bottom: 1px solid #f5f5f5;
+  border-bottom: 1px solid $neutral-f5;
 
   &:last-child {
     border-bottom: none;
@@ -292,14 +292,13 @@
   padding: 0;
 }
 
-/* Expanded item: image full width, then name, price, props column */
 .itemExpanded {
   display: flex;
   flex-direction: column;
   align-items: stretch;
   gap: 0;
   padding: $space-s 0;
-  border-bottom: 1px solid #f3f3f3;
+  border-bottom: 1px solid $neutral-f3;
   position: relative;
 }
 
@@ -356,17 +355,17 @@
   justify-content: center;
   font-size: 18px;
   line-height: 1;
-  background: #fff;
+  background: $white;
   border: none;
   cursor: pointer;
   color: $font-hover;
   border-radius: 4px;
   z-index: 5;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 4px rgba($black, 0.1);
 
   &:hover {
-    background: #fee;
-    color: #c00;
+    background: $legacy-red-soft;
+    color: $legacy-red;
   }
 }
 

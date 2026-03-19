@@ -43,19 +43,6 @@ const ProfilePage = () => {
           <Input id="phone" type="tel" value={auth.phone} onChange={auth.setPhone} className={styles.input} />
         </div>
 
-        <div className={styles.field}>
-          <label htmlFor="address" className={styles.label}>
-            Delivery Address
-          </label>
-          <textarea
-            id="address"
-            value={auth.address}
-            onChange={(e) => auth.setAddress(e.target.value)}
-            className={styles.textarea}
-            rows={3}
-          />
-        </div>
-
         <Button type="submit" className={styles.submitButton}>
           Save Changes
         </Button>

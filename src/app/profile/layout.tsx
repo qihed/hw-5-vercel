@@ -4,7 +4,6 @@ import { useSyncExternalStore } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { observer } from 'mobx-react-lite';
-import Header from 'components/Header';
 import Text from 'components/Text';
 import { useStore } from 'store/StoreContext';
 import ProfileIcon from 'icons/ProfileIcon';
@@ -61,7 +60,6 @@ function ProfileLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <Header />
       <div className={styles.layout}>
         <aside className={styles.sidebar}>
           <div className={styles.avatarSection}>

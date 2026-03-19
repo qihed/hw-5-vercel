@@ -13,7 +13,8 @@ export type TextProps = {
 };
 
 const Text: React.FC<TextProps> = ({ className, view, tag, weight, children, color, maxLines }) => {
-  const Tag = tag ?? 'p';
+  // Default to `span` to avoid invalid `<p>` nesting causing hydration mismatches.
+  const Tag = tag ?? 'span';
 
   const VIEW_STYLE_MAP: Record<NonNullable<TextProps['view']>, string> = {
     title: styles.textViewTitle,

@@ -2,6 +2,8 @@
 
 .text {
   font-family: 'Roboto', sans-serif;
+  display: block;
+  margin: 0;
   white-space: normal;
   overflow-wrap: break-word;
 
@@ -51,15 +53,15 @@
   }
 
   &.textColorPrimary {
-    color: #000000;
+    color: $black;
   }
 
   &.textColorSecondary {
-    color: #afadb5;
+    color: $font-hover;
   }
 
   &.textColorAccent {
-    color: #518581;
+    color: $brand;
   }
 
   &.textClamp {

@@ -2,15 +2,13 @@
 
 import { useEffect, useRef } from 'react';
 import type { ProductExtendedProps } from 'lib/productExtendedProps';
-import styles from 'components/ComparisonWidget/ComparisonWidget.module.scss';
+import styles from './ComparisonWidget.module.scss';
 
 export type ProductPropsPopoverProps = {
   props: ProductExtendedProps;
   anchorRef?: React.RefObject<HTMLElement | null>;
   onClose: () => void;
-  /** Inline-стили для PiP-окна (нет CSS-модулей) */
   inline?: boolean;
-  /** Блок под картинкой: картинка на всю ширину, затем характеристики в колонку */
   block?: boolean;
 };
 
@@ -85,10 +83,7 @@ export function ProductPropsPopover({ props, anchorRef, onClose, inline = false,
     if (block) return;
     const handleClickOutside = (e: MouseEvent) => {
       const target = e.target as Node;
-      if (
-        popoverRef.current?.contains(target) ||
-        anchorRef?.current?.contains(target)
-      ) return;
+      if (popoverRef.current?.contains(target) || anchorRef?.current?.contains(target)) return;
       onClose();
     };
     const handleEscape = (e: KeyboardEvent) => {
@@ -129,16 +124,9 @@ export function ProductPropsPopover({ props, anchorRef, onClose, inline = false,
 
   if (inline) {
     return (
-      <div
-        ref={popoverRef}
-        role="dialog"
-        aria-label="Дополнительные характеристики"
-        style={inlinePopoverStyle}
-      >
+      <div ref={popoverRef} role="dialog" aria-label="Дополнительные характеристики" style={inlinePopoverStyle}>
         <div style={inlineHeaderStyle}>
-          <span style={{ fontSize: 12, fontWeight: 600, color: '#afadb5' }}>
-            Тестовый режим
-          </span>
+          <span style={{ fontSize: 12, fontWeight: 600, color: '#afadb5' }}>Тестовый режим</span>
           <button
             type="button"
             onClick={onClose}
@@ -161,12 +149,8 @@ export function ProductPropsPopover({ props, anchorRef, onClose, inline = false,
         <dl style={{ margin: 0, padding: '8px 12px 12px' }}>
           {(Object.keys(LABELS) as (keyof ProductExtendedProps)[]).map((key) => (
             <div key={key} style={inlineRowStyle}>
-              <dt style={{ margin: 0, color: '#afadb5', flexShrink: 0 }}>
-                {LABELS[key]}
-              </dt>
-              <dd style={{ margin: 0, textAlign: 'right', fontWeight: 500 }}>
-                {props[key] ?? '—'}
-              </dd>
+              <dt style={{ margin: 0, color: '#afadb5', flexShrink: 0 }}>{LABELS[key]}</dt>
+              <dd style={{ margin: 0, textAlign: 'right', fontWeight: 500 }}>{props[key] ?? '—'}</dd>
             </div>
           ))}
         </dl>
@@ -175,20 +159,10 @@ export function ProductPropsPopover({ props, anchorRef, onClose, inline = false,
   }
 
   return (
-    <div
-      ref={popoverRef}
-      className={styles.propsPopover}
-      role="dialog"
-      aria-label="Дополнительные характеристики"
-    >
+    <div ref={popoverRef} className={styles.propsPopover} role="dialog" aria-label="Дополнительные характеристики">
       <div className={styles.propsPopoverHeader}>
         <span className={styles.propsPopoverTitle}>Тестовый режим</span>
-        <button
-          type="button"
-          className={styles.propsPopoverClose}
-          onClick={onClose}
-          aria-label="Закрыть"
-        >
+        <button type="button" className={styles.propsPopoverClose} onClick={onClose} aria-label="Закрыть">
           ×
         </button>
       </div>
@@ -203,3 +177,4 @@ export function ProductPropsPopover({ props, anchorRef, onClose, inline = false,
     </div>
   );
 }
+

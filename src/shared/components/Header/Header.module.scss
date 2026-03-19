@@ -10,10 +10,10 @@
   align-items: center;
   gap: 16px;
   padding: 16px;
-  border-bottom: 2px solid #f3f3f3;
+  border-bottom: 2px solid $neutral-f3;
   width: 100%;
   min-height: 80px;
-  background-color: #ffffff;
+  background-color: $white;
 
   @include md {
     flex-direction: row;
@@ -107,7 +107,7 @@
 }
 
 .profileLink {
-  color: #000;
+  color: $black;
 }
 
 .bagWrapper {
@@ -168,7 +168,7 @@
   padding: 0 4px;
   border-radius: 999px;
   background-color: $brand;
-  color: #fff;
+  color: $white;
   font-size: 12px;
   line-height: 16px;
   text-align: center;
@@ -207,7 +207,7 @@
   font-weight: 600;
   text-decoration: none;
   background-color: $brand;
-  color: #fff;
+  color: $white;
   transition: background-color 0.2s;
 
   &:hover {
@@ -225,7 +225,7 @@
   font-weight: 600;
   text-decoration: none;
   background-color: $brand-hover;
-  color: #fff;
+  color: $white;
   transition: background-color 0.2s;
 
   &:hover {

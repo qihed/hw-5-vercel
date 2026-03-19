@@ -47,13 +47,13 @@
 
 .clearSearchBtn {
   flex-shrink: 0;
-  background-color: #e04141;
-  color: #fff;
-  border: 1px solid #e04141;
+  background-color: $accent-red-500;
+  color: $white;
+  border: 1px solid $accent-red-500;
 
   &:hover {
-    background-color: #e65c5c;
-    border-color: #e65c5c;
+    background-color: $accent-red-400;
+    border-color: $accent-red-400;
   }
 }
 
@@ -81,13 +81,13 @@
 
 .clearBtn {
   align-self: flex-start;
-  background-color: #e04141;
-  color: #fff;
-  border: 1px solid #e04141;
+  background-color: $accent-red-500;
+  color: $white;
+  border: 1px solid $accent-red-500;
 
   &:hover {
-    background-color: #e65c5c;
-    border-color: #e65c5c;
+    background-color: $accent-red-400;
+    border-color: $accent-red-400;
   }
 }
 

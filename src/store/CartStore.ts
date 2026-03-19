@@ -6,12 +6,19 @@ type RawCartItem = { product: { id?: number } | number; quantity?: number };
 
 function parseCartResponse(data: unknown): CartItem[] {
   const raw: unknown[] = Array.isArray(data) ? data : Array.isArray((data as { data?: unknown[] })?.data) ? (data as { data: unknown[] }).data : [];
-  return (raw as RawCartItem[])
+  const list = (raw as RawCartItem[])
     .map((item) => ({
       productId: typeof item.product === 'object' ? (item.product.id ?? 0) : item.product,
       quantity: item.quantity ?? 1,
     }))
     .filter((item) => item.productId > 0);
+
+  const aggregated = new Map<number, number>();
+  for (const item of list) {
+    aggregated.set(item.productId, (aggregated.get(item.productId) ?? 0) + (item.quantity ?? 1));
+  }
+
+  return Array.from(aggregated.entries()).map(([productId, quantity]) => ({ productId, quantity }));
 }
 
 export class CartStore {

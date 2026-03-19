@@ -2,10 +2,10 @@
 
 import Link from 'next/link';
 import { observer } from 'mobx-react-lite';
-import Header from 'components/Header';
 import Text from 'components/Text';
 import type { ProductCategory } from 'api/types';
 import styles from './categories-page.module.scss';
+import { motion } from 'framer-motion';
 
 type CategoriesContentProps = {
   categories: ProductCategory[];
@@ -13,8 +13,12 @@ type CategoriesContentProps = {
 
 const CategoriesContent = observer(({ categories }: CategoriesContentProps) => (
   <>
-    <Header />
-    <main className={styles.main}>
+    <motion.main
+      className={styles.main}
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+    >
       <div className={styles.hero}>
         <Text view="title">Categories</Text>
         <Text view="p-20" color="secondary" className={styles.heroText}>
@@ -45,7 +49,7 @@ const CategoriesContent = observer(({ categories }: CategoriesContentProps) => (
           })}
         </div>
       </div>
-    </main>
+    </motion.main>
   </>
 ));
 

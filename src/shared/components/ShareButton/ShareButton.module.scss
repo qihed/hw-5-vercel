@@ -1,0 +1,44 @@
+@use 'styles/variables' as *;
+
+.button {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 0 $space-l;
+  border-radius: 12px;
+  border: 1px solid $gray-200;
+  background: $white;
+  color: $gray-900;
+  cursor: pointer;
+  transition: background 140ms ease, border-color 140ms ease;
+
+  &:hover {
+    background: $gray-50;
+    border-color: $gray-300;
+  }
+
+  &:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+}
+
+.iconOnly {
+  width: 52px;
+  padding: 0;
+}
+
+.icon {
+  display: inline-flex;
+  color: rgba($gray-900, 0.9);
+}
+
+.label {
+  font-family: 'Roboto', sans-serif;
+  font-size: 18px;
+  font-style: normal;
+}
+

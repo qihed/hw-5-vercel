@@ -28,6 +28,7 @@
       "icons/*": ["./src/shared/icons/*"],
       "hooks/*": ["./src/hooks/*"],
       "lib/*": ["./src/lib/*"],
+      "widget/*": ["./src/widget/*"],
       "styles/*": ["./src/shared/styles/*"]
     }
   },

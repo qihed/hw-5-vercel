@@ -29,13 +29,13 @@
 .label {
   font-family: 'Roboto', sans-serif;
   font-size: 14px;
-  color: #6b7280;
+  color: $gray-500;
 }
 
 .input {
   border-radius: 12px;
-  border-color: #e5e7eb;
-  background: #f9fafb;
+  border-color: $gray-200;
+  background: $gray-50;
 
   &:focus-within {
     border-color: $brand;
@@ -46,9 +46,9 @@
   font-family: 'Roboto', sans-serif;
   font-size: 16px;
   padding: 14px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid $gray-200;
   border-radius: 12px;
-  background: #f9fafb;
+  background: $gray-50;
   resize: vertical;
   min-height: 80px;
   outline: none;

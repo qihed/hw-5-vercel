@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import Header from "components/Header";
 import Text from "components/Text";
+import { motion } from "framer-motion";
 import AwardIcon from "icons/AwardIcon";
 import PackageIcon from "icons/PackageIcon";
 import HeadphonesIcon from "icons/HeadphonesIcon";
@@ -46,12 +46,41 @@ const team = [
   { name: "Elena Ivanova", role: "Customer Relations Manager", image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400&q=80" },
 ];
 
+const EASE_OUT: [number, number, number, number] = [0.16, 1, 0.3, 1];
+
+const pageVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.08,
+      delayChildren: 0.05,
+    },
+  },
+};
+
+const sectionVariants = {
+  hidden: { opacity: 0, y: 12 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.35, ease: EASE_OUT },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.28, ease: EASE_OUT },
+  },
+};
+
 export default function AboutPage() {
   return (
     <div className={styles.page}>
-      <Header />
-      <main>
-        <section className={styles.hero}>
+      <motion.main variants={pageVariants} initial="hidden" animate="visible">
+        <motion.section className={styles.hero} variants={sectionVariants}>
           <div className={styles.heroContent}>
             <div className={styles.heroGrid}>
               <div>
@@ -79,27 +108,26 @@ export default function AboutPage() {
               </div>
             </div>
           </div>
-        </section>
+        </motion.section>
 
-        {/* Stats Section */}
-        <section className={styles.stats}>
+        <motion.section className={styles.stats} variants={sectionVariants}>
           <div className={styles.statsContent}>
             <div className={styles.statsGrid}>
               {stats.map((stat, index) => (
-                <div key={index} className={styles.statItem}>
+                <motion.div key={index} className={styles.statItem} variants={itemVariants}>
                   <Text tag="div" view="title" className={styles.statNumber}>
                     {stat.number}
                   </Text>
                   <Text tag="div" view="p-14" className={styles.statLabel}>
                     {stat.label}
                   </Text>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
-        </section>
+        </motion.section>
 
-        <section className={styles.features}>
+        <motion.section className={styles.features} variants={sectionVariants}>
           <div className={styles.featuresContent}>
             <div className={styles.featuresHeader}>
               <Text view="title" tag="h2" className={styles.featuresTitle}>
@@ -111,7 +139,7 @@ export default function AboutPage() {
             </div>
             <div className={styles.featuresGrid}>
               {features.map((feature, index) => (
-                <div key={index} className={styles.featureCard}>
+                <motion.div key={index} className={styles.featureCard} variants={itemVariants}>
                   <div className={styles.featureIcon}>{feature.icon}</div>
                   <Text view="p-18" weight="medium" tag="h3" className={styles.featureTitle}>
                     {feature.title}
@@ -119,13 +147,13 @@ export default function AboutPage() {
                   <Text view="p-14" color="secondary" className={styles.featureDescription}>
                     {feature.description}
                   </Text>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
-        </section>
+        </motion.section>
 
-        <section className={styles.team}>
+        <motion.section className={styles.team} variants={sectionVariants}>
           <div className={styles.teamContent}>
             <div className={styles.teamHeader}>
               <Text view="title" tag="h2" className={styles.teamTitle}>
@@ -137,7 +165,7 @@ export default function AboutPage() {
             </div>
             <div className={styles.teamGrid}>
               {team.map((member, index) => (
-                <div key={index} className={styles.teamMember}>
+                <motion.div key={index} className={styles.teamMember} variants={itemVariants}>
                   <div className={styles.teamAvatar}>
                     <Image
                       src={member.image}
@@ -153,13 +181,13 @@ export default function AboutPage() {
                   <Text view="p-14" color="secondary" className={styles.teamRole}>
                     {member.role}
                   </Text>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
-        </section>
+        </motion.section>
 
-        <section className={styles.cta}>
+        <motion.section className={styles.cta} variants={sectionVariants}>
           <div className={styles.ctaContent}>
             <Text view="title" tag="h2" className={styles.ctaTitle}>
               Ready to get started?
@@ -173,8 +201,8 @@ export default function AboutPage() {
               </Link>
             </div>
           </div>
-        </section>
-      </main>
+        </motion.section>
+      </motion.main>
     </div>
   );
 }
