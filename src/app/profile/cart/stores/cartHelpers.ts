@@ -3,7 +3,9 @@ import type { OrderItem } from 'lib/ordersStorage';
 import type { PaymentCard } from './types';
 import { DEFAULT_PRODUCT_IMAGE, getProductCategoryName, getProductImageUrl } from 'api/products';
 
-export const PAYMENT_CARDS_STORAGE_KEY = 'profile.paymentCards.v1';
+/** Must match `useSettingsPageModel` — settings persist cards under v2. */
+export const PAYMENT_CARDS_STORAGE_KEY = 'profile.paymentCards.v2';
+const LEGACY_PAYMENT_CARDS_STORAGE_KEY = 'profile.paymentCards.v1';
 export const POSTPAYMENT_POPUP_STORAGE_KEY = 'postPayment.deliveryPopup.v1';
 
 export function sleep(ms: number) {
@@ -13,7 +15,9 @@ export function sleep(ms: number) {
 export function safeReadPaymentCards(): PaymentCard[] {
   if (typeof window === 'undefined') return [];
   try {
-    const raw = window.localStorage.getItem(PAYMENT_CARDS_STORAGE_KEY);
+    const raw =
+      window.localStorage.getItem(PAYMENT_CARDS_STORAGE_KEY) ??
+      window.localStorage.getItem(LEGACY_PAYMENT_CARDS_STORAGE_KEY);
     if (!raw) return [];
     const parsed = JSON.parse(raw) as unknown;
     if (!Array.isArray(parsed)) return [];

@@ -160,16 +160,7 @@ const LoginPage = () => {
             </Text>
           </form>
 
-          <div className={styles.divider}>
-            <div className={styles.dividerLine}>
-              <div className={styles.dividerBorder} />
-            </div>
-            <div className={styles.dividerText}>
-              <Text view="p-14" tag="span" color="secondary">
-                or
-              </Text>
-            </div>
-          </div>
+          
         </div>
       </main>
     </div>
