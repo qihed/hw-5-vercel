@@ -10,11 +10,16 @@ import {
   sortCards,
 } from './cartHelpers';
 import type { PaymentCard } from './types';
+import type { AddressEntry } from 'app/profile/settings/stores/types';
+import { sortAddresses } from 'app/profile/settings/stores/addressesHelpers';
 
 export type PaymentModal = {
   isOpen: boolean;
   cards: PaymentCard[];
   selectedCardId: string;
+  addresses: AddressEntry[];
+  selectedAddressId: string;
+  manualAddress: string;
   paying: boolean;
   checkingOut: boolean;
   payError: string | null;
@@ -34,6 +39,9 @@ export function useCartPageStore() {
     isOpen: false,
     cards: [],
     selectedCardId: '',
+    addresses: [],
+    selectedAddressId: '',
+    manualAddress: '',
     paying: false,
     checkingOut: false,
     payError: null,
@@ -44,6 +52,7 @@ export function useCartPageStore() {
   // `hydratePaymentCards` already sorts and stores the sorted array in `paymentModal.cards`.
   // We expose it as-is to avoid sorting twice.
   const sortedCards = paymentModal.cards;
+  const sortedAddresses = paymentModal.addresses;
 
   const cartOrigin = typeof window !== 'undefined' ? window.location.origin : '';
   const shareText = useMemo(() => buildCartShareText(items, cartOrigin), [items, cartOrigin]);
@@ -59,6 +68,7 @@ export function useCartPageStore() {
       payError: null,
       paying: false,
       checkingOut: false,
+      manualAddress: '',
     }));
   }, [items.length, loadingProducts, paymentModal.checkingOut, paymentModal.paying]);
 
@@ -85,6 +95,25 @@ export function useCartPageStore() {
 
   const selectCard = useCallback((id: string) => {
     setPaymentModal((prev) => ({ ...prev, selectedCardId: id }));
+  }, []);
+
+  const hydrateAddresses = useCallback((addresses: AddressEntry[]) => {
+    const sorted = sortAddresses(addresses);
+    const def = sorted.find((a) => a.isDefault) ?? sorted[0];
+    setPaymentModal((prev) => ({
+      ...prev,
+      addresses: sorted,
+      selectedAddressId: sorted.length ? (def?.id ?? '') : '',
+      manualAddress: sorted.length ? '' : prev.manualAddress,
+    }));
+  }, []);
+
+  const selectDeliveryAddress = useCallback((id: string) => {
+    setPaymentModal((prev) => ({ ...prev, selectedAddressId: id }));
+  }, []);
+
+  const setManualAddress = useCallback((value: string) => {
+    setPaymentModal((prev) => ({ ...prev, manualAddress: value }));
   }, []);
 
   const setPayError = useCallback((msg: string | null) => {
@@ -143,11 +172,15 @@ export function useCartPageStore() {
     cartLines,
     shareText,
     sortedCards,
+    sortedAddresses,
     paymentModal,
     openPayModal,
     closePayModal,
     selectCard,
     hydratePaymentCards,
+    hydrateAddresses,
+    selectDeliveryAddress,
+    setManualAddress,
     setPayError,
     setPaying,
     setCheckingOut,

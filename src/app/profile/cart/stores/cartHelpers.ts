@@ -1,7 +1,11 @@
 import type { CartItem, Product } from 'api/types';
 import type { OrderItem } from 'lib/ordersStorage';
 import type { PaymentCard } from './types';
+import type { AddressEntry } from 'app/profile/settings/stores/types';
+import { safeParseAddresses, sortAddresses } from 'app/profile/settings/stores/addressesHelpers';
 import { DEFAULT_PRODUCT_IMAGE, getProductCategoryName, getProductImageUrl } from 'api/products';
+
+const ADDRESSES_STORAGE_KEY = 'profile.addresses.v1';
 
 /** Must match `useSettingsPageModel` — settings persist cards under v2. */
 export const PAYMENT_CARDS_STORAGE_KEY = 'profile.paymentCards.v2';
@@ -60,6 +64,24 @@ export function sortCards(cards: PaymentCard[]) {
         Number(Boolean(b.isDefault)) - Number(Boolean(a.isDefault)) ||
         Number(b.createdAt ?? 0) - Number(a.createdAt ?? 0)
     );
+}
+
+/** Same storage as settings; optional single entry from profile when the list is empty. */
+export function safeReadDeliveryAddresses(profileAddressFallback: string): AddressEntry[] {
+  if (typeof window === 'undefined') return [];
+  const stored = safeParseAddresses(window.localStorage.getItem(ADDRESSES_STORAGE_KEY));
+  const sorted = sortAddresses(stored);
+  if (sorted.length > 0) return sorted;
+  const legacy = profileAddressFallback.trim();
+  if (!legacy) return [];
+  return [
+    {
+      id: '__profile_fallback__',
+      address: legacy,
+      isDefault: true,
+      createdAt: Date.now(),
+    },
+  ];
 }
 
 export type CartLine = {

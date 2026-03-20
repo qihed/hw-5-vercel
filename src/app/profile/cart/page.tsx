@@ -25,10 +25,15 @@ const ProfileCartPage = () => {
     checkingOut,
     payError,
     sortedCards,
+    sortedAddresses,
     selectedCardId,
+    selectedAddressId,
+    manualAddress,
     openPayModal,
     closePayModal,
     selectCard,
+    selectDeliveryAddress,
+    setManualAddress,
     handlePay,
     setQuantity,
     addItem,
@@ -316,6 +321,57 @@ const ProfileCartPage = () => {
 
               <div className={styles.paySection}>
                 <Text view="p-16" weight="medium">
+                  Delivery address
+                </Text>
+
+                {sortedAddresses.length === 0 ? (
+                  <div className={styles.payEmpty}>
+                    <Text view="p-14" color="secondary">
+                      No saved addresses on this device. Enter the address for this order, or add one in settings.
+                    </Text>
+                    <textarea
+                      className={styles.payTextarea}
+                      value={manualAddress}
+                      onChange={(e) => setManualAddress(e.target.value)}
+                      disabled={paying}
+                      placeholder="City, street, building, apartment…"
+                      rows={3}
+                      autoComplete="street-address"
+                    />
+                    <Link className={styles.payLink} href="/profile/settings" onClick={closePayModal}>
+                      Manage addresses in settings
+                    </Link>
+                  </div>
+                ) : (
+                  <div className={styles.cardList}>
+                    {sortedAddresses.map((a) => (
+                      <label key={a.id} className={styles.cardOption}>
+                        <input
+                          type="radio"
+                          name="deliveryAddress"
+                          checked={selectedAddressId === a.id}
+                          onChange={() => selectDeliveryAddress(a.id)}
+                          disabled={paying}
+                        />
+                        <span className={styles.cardOptionText}>
+                          {a.label ? (
+                            <span className={styles.addressLines}>
+                              <span className={styles.addressPrimary}>{a.label}</span>
+                              <span className={styles.cardOptionMeta}>{a.address}</span>
+                            </span>
+                          ) : (
+                            a.address
+                          )}
+                          {a.isDefault && <span className={styles.defaultPill}>Default</span>}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div className={styles.paySection}>
+                <Text view="p-16" weight="medium">
                   Choose a card
                 </Text>
 
@@ -367,7 +423,11 @@ const ProfileCartPage = () => {
                 type="button"
                 onClick={handlePay}
                 loading={paying}
-                disabled={sortedCards.length === 0 || !selectedCardId}
+                disabled={
+                  sortedCards.length === 0 ||
+                  !selectedCardId ||
+                  (sortedAddresses.length === 0 ? manualAddress.trim().length === 0 : !selectedAddressId)
+                }
               >
                 Pay now
               </Button>

@@ -1,6 +1,7 @@
 'use client';
 
 import cn from 'classnames';
+import { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import FavoriteIcon from 'icons/FavoriteIcon';
 import { useStore } from 'store/StoreContext';
@@ -19,7 +20,12 @@ const stopLink = (e: React.MouseEvent) => {
 
 const FavoriteToggleButton = ({ productId, className, stopLinkNavigation = false }: FavoriteToggleButtonProps) => {
   const { favorites } = useStore();
-  const isFavorite = favorites.hydrated && favorites.isFavorite(productId);
+  // Favorites load from localStorage after mount; SSR and the first client pass must match.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  const isFavorite = mounted && favorites.hydrated && favorites.isFavorite(productId);
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (stopLinkNavigation) stopLink(e);

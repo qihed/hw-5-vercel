@@ -344,6 +344,47 @@
   width: fit-content;
 }
 
+.payTextarea {
+  width: 100%;
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid $gray-200;
+  border-radius: 12px;
+  background: $white;
+  color: $neutral-333;
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  line-height: 1.45;
+  resize: vertical;
+  min-height: 72px;
+
+  &::placeholder {
+    color: rgba($neutral-333, 0.45);
+  }
+
+  &:focus {
+    outline: 2px solid rgba($brand, 0.35);
+    outline-offset: 1px;
+  }
+
+  &:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+}
+
+.addressLines {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.addressPrimary {
+  font-weight: 600;
+}
+
 .cardList {
   display: flex;
   flex-direction: column;

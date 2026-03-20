@@ -8,7 +8,13 @@ import { getProducts } from 'api/products';
 import type { Product } from 'api/types';
 import { appendOrderToStorage, readOrdersFromStorage, type Order } from 'lib/ordersStorage';
 import { useCartPageStore } from './stores/cartStore';
-import { safeReadPaymentCards, sleep, buildOrderItems, POSTPAYMENT_POPUP_STORAGE_KEY } from './stores/cartHelpers';
+import {
+  safeReadPaymentCards,
+  safeReadDeliveryAddresses,
+  sleep,
+  buildOrderItems,
+  POSTPAYMENT_POPUP_STORAGE_KEY,
+} from './stores/cartHelpers';
 
 function isSameProductsMap(
   current: Record<number, Product>,
@@ -36,6 +42,7 @@ export function useCartPageModel() {
     setProductsLoading,
     hydrateProducts,
     hydratePaymentCards,
+    hydrateAddresses,
     setPayError,
     setPaying,
     setCheckingOut,
@@ -81,13 +88,13 @@ export function useCartPageModel() {
       });
   }, [productIdsKey, items, products, hydrateProducts, resetProducts, setProductsLoading]);
 
-  // Hydrate payment cards when payment modal is opened.
+  // Hydrate saved cards and delivery addresses when the payment modal opens.
   useEffect(() => {
     if (!paymentModal.isOpen) return;
 
-    const nextCards = safeReadPaymentCards();
-    hydratePaymentCards(nextCards);
-  }, [paymentModal.isOpen, hydratePaymentCards]);
+    hydratePaymentCards(safeReadPaymentCards());
+    hydrateAddresses(safeReadDeliveryAddresses((auth.address || '').trim()));
+  }, [paymentModal.isOpen, hydratePaymentCards, hydrateAddresses, auth.address]);
 
   const handlePay = useCallback(async () => {
     setPayError(null);
@@ -95,6 +102,17 @@ export function useCartPageModel() {
     const selectedCardId = paymentModal.selectedCardId;
     if (!selectedCardId) {
       setPayError('Select a card to continue.');
+      return;
+    }
+
+    const trimmedManual = paymentModal.manualAddress.trim();
+    const fromList =
+      paymentModal.addresses.length > 0
+        ? paymentModal.addresses.find((a) => a.id === paymentModal.selectedAddressId)?.address?.trim() ?? ''
+        : '';
+    const deliveryAddress = paymentModal.addresses.length > 0 ? fromList : trimmedManual;
+    if (!deliveryAddress) {
+      setPayError('Enter a delivery address to continue.');
       return;
     }
 
@@ -127,12 +145,11 @@ export function useCartPageModel() {
 
       if (typeof window !== 'undefined') {
         const days = 5 + Math.floor(Math.random() * 3);
-        const address = (auth.address || '').trim();
         window.localStorage.setItem(
           POSTPAYMENT_POPUP_STORAGE_KEY,
           JSON.stringify({
             days,
-            address,
+            address: deliveryAddress,
             orderId: order.id,
             createdAt: Date.now(),
           })
@@ -149,10 +166,12 @@ export function useCartPageModel() {
       setCheckingOut(false);
     }
   }, [
-    auth.address,
     cart,
     router,
     paymentModal.selectedCardId,
+    paymentModal.addresses,
+    paymentModal.selectedAddressId,
+    paymentModal.manualAddress,
     items,
     products,
     closePayModal,
@@ -170,6 +189,8 @@ export function useCartPageModel() {
     checkingOut: store.paymentModal.checkingOut,
     payError: store.paymentModal.payError,
     selectedCardId: store.paymentModal.selectedCardId,
+    selectedAddressId: store.paymentModal.selectedAddressId,
+    manualAddress: store.paymentModal.manualAddress,
   };
 }
 

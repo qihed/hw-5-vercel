@@ -103,10 +103,12 @@
 }
 
 .priceInput {
-  width: 100px;
+  width: 122px;
+  min-height: 56px;
+  box-sizing: border-box;
 
   @include md {
-    width: 120px;
+    width: 148px;
   }
 }
 
