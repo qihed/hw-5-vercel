@@ -91,6 +91,10 @@ export class AuthStore {
       this.email = '';
       this.password = '';
       this.rememberMe = false;
+      this.nickname = '';
+      this.profileEmail = '';
+      this.phone = '';
+      this.address = '';
       this.meta.reset();
     });
   }

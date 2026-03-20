@@ -23,6 +23,14 @@ export const LocalStorageModel = {
     }
   },
 
+  clear(): void {
+    try {
+      localStorage.clear();
+    } catch {
+      return;
+    }
+  },
+
   getItemJson<T>(key: string, fallback: T): T {
     try {
       const data = localStorage.getItem(key);

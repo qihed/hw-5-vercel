@@ -86,7 +86,7 @@ export class FavoritesStore {
     makeAutoObservable(this);
   }
 
-  hydrate() {
+  hydrate(options?: { persist?: boolean }) {
     if (typeof window === 'undefined') return;
     const fallback: FavoritesStateV1 = { version: 1, folders: [INBOX_FOLDER], items: [] };
     const raw = LocalStorageModel.getItemJson<unknown>(STORAGE_KEY, fallback);
@@ -99,7 +99,9 @@ export class FavoritesStore {
     this.folders = folders;
     this.items = items;
     this.hydrated = true;
-    this.persist();
+    if (options?.persist !== false) {
+      this.persist();
+    }
   }
 
   private persist() {

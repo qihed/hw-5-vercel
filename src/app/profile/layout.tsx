@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { observer } from 'mobx-react-lite';
 import Text from 'components/Text';
 import { useStore } from 'store/StoreContext';
+import { LocalStorageModel } from 'store/LocalStorageModel';
 import ProfileIcon from 'icons/ProfileIcon';
 import OrdersIcon from 'icons/OrdersIcon';
 import CartIcon from 'icons/CartIcon';
@@ -45,11 +46,16 @@ function getInitials(raw: unknown): string {
 function ProfileLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { cart, auth, favorites } = useStore();
+  const { cart, auth, favorites, comparison } = useStore();
   const mounted = useSyncExternalStore(() => () => {}, () => true, () => false);
 
   const handleLogout = () => {
-    auth.logout().then(() => router.replace('/'));
+    auth.logout().then(() => {
+      favorites.hydrate({ persist: false });
+      comparison.clear();
+      LocalStorageModel.clear();
+      router.replace('/');
+    });
   };
 
   const isActive = (href: string) => {

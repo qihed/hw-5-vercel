@@ -79,8 +79,7 @@ export async function resetPassword(params: ResetPasswordRequest): Promise<void>
 }
 
 export function logout(): Promise<void> {
-  clearToken();
-  clearStoredUser();
+  LocalStorageModel.clear();
   return Promise.resolve();
 }
 
